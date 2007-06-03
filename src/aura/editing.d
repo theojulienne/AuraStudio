@@ -1,10 +1,10 @@
 module aura.editing;
 
-enum
+enum EditMode
 {
-	aEditNone=0,
-	aEditObject,
-	aEditFace,
-	aEditEdge,
-	aEditVertex,
+	None=0,
+	Body,
+	Face,
+	Edge,
+	Vertex,
 }

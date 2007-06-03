@@ -44,6 +44,11 @@ class Vertex
 		x = y = z = 0.0f;
 	}
 	
+	void deb( )
+	{
+		writefln( "%s,%s,%s", x, y, z );
+	}
+	
 	int opAddAssign( Vertex o )
 	{
 		x += o.x;
@@ -106,6 +111,23 @@ class Edge
 		vb.edges[en] = this;
 	}
 	
+	Vertex getOther( Vertex v )
+	{
+		if ( va == v ) return vb;
+		return va;
+	}
+	
+	bool hasFace( Face f )
+	{
+		foreach ( mf; faces )
+		{
+			if ( mf == f )
+				return true;
+		}
+		
+		return false;
+	}
+	
 	void addFace( Face f )
 	{
 		if ( f is null ) return;
@@ -118,6 +140,11 @@ class Edge
 	bool hasVertex( Vertex v )
 	{
 		return ( va == v || vb == v );
+	}
+	
+	Vertex getCenter( )
+	{
+		return Vertex.makeCenterOf( va, vb );
 	}
 	
 	static Edge getEdge( Face f, Vertex a, Vertex b )
@@ -175,7 +202,7 @@ class Face
 		
 		tris.length = verts.length - 2;
 		
-		writefln( "Tris calculated: %s", tris.length );
+		//writefln( "Tris calculated: %s", tris.length );
 		
 		if ( verts.length < 3 )
 		{
@@ -244,6 +271,142 @@ class Face
 	
 	void renderFaceSelectVertex( )
 	{
+		foreach ( t; tris )
+		{
+			Vertex center = new Vertex( null, 0, 0, 0 );
+			foreach ( v; t.verts )
+				center += v;
+			center /= t.verts.length;
+			
+			Vertex va = t.verts[0];
+			Vertex vb = t.verts[1];
+			Vertex vc = t.verts[2];
+			
+			Edge ea = Edge.getEdge( null, va, vb );
+			Edge eb = Edge.getEdge( null, vb, vc );
+			Edge ec = Edge.getEdge( null, vc, va );
+			
+			Vertex ca = Vertex.makeCenterOf( va, vb );
+			Vertex cb = Vertex.makeCenterOf( vb, vc );
+			Vertex cc = Vertex.makeCenterOf( vc, va );
+			
+			int real_edges = 0;
+			
+			if ( ea.hasFace(this) )
+				real_edges++;
+			else
+				ea = null;
+			
+			if ( eb.hasFace(this) )
+				real_edges++;
+			else
+				eb = null;
+				
+			if ( ec.hasFace(this) )
+				real_edges++;
+			else
+				ec = null;
+			
+			if ( real_edges == 3 )
+			{
+				glPushName( cast(int)va );
+				glBegin( GL_TRIANGLES );
+				glColor3f( 1.0f, 0.0f, 0.0f );
+				va.glv; ca.glv; center.glv;
+				glColor3f( 1.0f, 0.5f, 0.0f );
+				va.glv; cc.glv; center.glv;
+				glEnd( );
+				glPopName( );
+
+				glPushName( cast(int)vb );
+				glBegin( GL_TRIANGLES );
+				glColor3f( 0.0f, 1.0f, 0.0f );
+				vb.glv; cb.glv; center.glv;
+				glColor3f( 0.0f, 1.0f, 0.5f );
+				vb.glv; ca.glv; center.glv;
+				glEnd( );
+				glPopName( );
+
+				glPushName( cast(int)vc );
+				glBegin( GL_TRIANGLES );
+				glColor3f( 0.0f, 0.0f, 1.0f );
+				vc.glv; cc.glv; center.glv;
+				glColor3f( 0.0f, 0.5f, 1.0f );
+				vc.glv; cb.glv; center.glv;
+				glEnd( );
+				glPopName( );
+			}
+			
+			else if ( real_edges == 2 )
+			{
+				// move the edges down the stack so the 2 real edges are "ea" and "eb"
+				if ( ea is null )
+				{
+					ea = eb;
+					eb = ec;
+				}
+				else if ( eb is null )
+				{
+					eb = ec;
+				}
+				
+				// which vertex is shared?
+				Vertex shared = ea.va;
+				if ( !eb.hasVertex( shared ) ) shared = ea.vb;
+				if ( !eb.hasVertex( shared ) ) throw new Exception( "2 edges of a triangle don't share a common vertex!" );
+				
+				if ( !ea.hasVertex( shared ) || !eb.hasVertex( shared ) )
+					throw new Exception( "Something broke :)" );
+				
+				// find the 2 verts that are unique (not shared by a real edge)
+				Vertex ua = ea.getOther( shared );
+				Vertex ub = eb.getOther( shared );
+				
+				if ( ua == shared || ub == shared )
+					throw new Exception( "Unique vertex was same as shared vertex" );
+				
+				// calculate the center of the edge between ua and ub
+				Vertex ecenter = Vertex.makeCenterOf( ua, ub );
+				
+				// calculate the center of each real edges
+				Vertex eac = ea.getCenter( );
+				Vertex ebc = eb.getCenter( );
+				
+				glDisable( GL_CULL_FACE );
+				
+				glPushName( cast(int)shared );
+				glBegin( GL_TRIANGLES );
+				glColor3f( 1.0f, 0.0f, 0.0f );
+				shared.glv; eac.glv; ecenter.glv;
+				shared.glv; ebc.glv; ecenter.glv;
+				glEnd( );
+				glPopName( );
+				
+				glPushName( cast(int)ua );
+				glBegin( GL_TRIANGLES );
+				glColor3f( 1.0f, 0.0f, 0.0f );
+				ua.glv; eac.glv; ecenter.glv;
+				glEnd( );
+				glPopName( );
+				
+				glPushName( cast(int)ub );
+				glBegin( GL_TRIANGLES );
+				glColor3f( 1.0f, 0.0f, 0.0f );
+				ub.glv; ebc.glv; ecenter.glv;
+				glEnd( );
+				glPopName( );
+				
+				//writefln( "(%s) %s, %s, %s", real_edges, ea, eb, ec );
+			}
+			
+			else if ( real_edges == 1 )
+			{
+				throw new Exception( "Encountered a sub-triangle with only 1 real edge. Was triangulation implemented without adding vertex detection code for this case? Oops!" );
+			}
+		}
+		
+		/*
+		
 		Vertex center = new Vertex( null, 0, 0, 0 );
 		foreach ( v; verts )
 			center += v;
@@ -285,10 +448,131 @@ class Face
 		vc.glv; cb.glv; center.glv;
 		glEnd( );
 		glPopName( );
+		*/
 	}
 	
 	void renderFaceSelectEdge( )
 	{
+		foreach ( t; tris )
+		{
+			Vertex center = new Vertex( null, 0, 0, 0 );
+			foreach ( v; t.verts )
+				center += v;
+			center /= t.verts.length;
+			
+			Vertex va = t.verts[0];
+			Vertex vb = t.verts[1];
+			Vertex vc = t.verts[2];
+			
+			Edge ea = Edge.getEdge( null, va, vb );
+			Edge eb = Edge.getEdge( null, vb, vc );
+			Edge ec = Edge.getEdge( null, vc, va );
+			
+			int real_edges = 0;
+			
+			if ( ea.hasFace(this) )
+				real_edges++;
+			else
+				ea = null;
+			
+			if ( eb.hasFace(this) )
+				real_edges++;
+			else
+				eb = null;
+				
+			if ( ec.hasFace(this) )
+				real_edges++;
+			else
+				ec = null;
+			
+			if ( real_edges == 3 )
+			{
+				// we have 3 edges that belong to this face.
+				// render the tris from the center to the verts
+				
+				glPushName( cast(int)ea );
+				glBegin( GL_TRIANGLES );
+				glColor3f( 1.0f, 0.0f, 0.0f );
+				va.glv; vb.glv; center.glv;
+				glEnd( );
+				glPopName( );
+
+				glPushName( cast(int)eb );
+				glBegin( GL_TRIANGLES );
+				glColor3f( 0.0f, 1.0f, 0.0f );
+				vb.glv; vc.glv; center.glv;
+				glEnd( );
+				glPopName( );
+
+				glPushName( cast(int)ec );
+				glBegin( GL_TRIANGLES );
+				glColor3f( 0.0f, 0.0f, 1.0f );
+				vc.glv; va.glv; center.glv;
+				glEnd( );
+				glPopName( );
+			}
+			
+			else if ( real_edges == 2 )
+			{
+				// move the edges down the stack so the 2 real edges are "ea" and "eb"
+				if ( ea is null )
+				{
+					ea = eb;
+					eb = ec;
+				}
+				else if ( eb is null )
+				{
+					eb = ec;
+				}
+				
+				// which vertex is shared?
+				Vertex shared = ea.va;
+				if ( !eb.hasVertex( shared ) ) shared = ea.vb;
+				if ( !eb.hasVertex( shared ) ) throw new Exception( "2 edges of a triangle don't share a common vertex!" );
+				
+				if ( !ea.hasVertex( shared ) || !eb.hasVertex( shared ) )
+					throw new Exception( "Something broke :)" );
+				
+				// find the 2 verts that are unique (not shared by a real edge)
+				Vertex ua = ea.getOther( shared );
+				Vertex ub = eb.getOther( shared );
+				
+				if ( ua == shared || ub == shared )
+					throw new Exception( "Unique vertex was same as shared vertex" );
+				
+				// calculate the center of the edge between ua and ub
+				Vertex ecenter = Vertex.makeCenterOf( ua, ub );
+				
+				// got all we need!
+				
+				glDisable( GL_CULL_FACE );
+				
+				glPushName( cast(int)ea );
+				glBegin( GL_TRIANGLES );
+				glColor3f( 1.0f, 0.0f, 0.0f );
+				shared.glv; ua.glv; ecenter.glv;
+				glEnd( );
+				glPopName( );
+
+				glPushName( cast(int)eb );
+				glBegin( GL_TRIANGLES );
+				glColor3f( 0.0f, 1.0f, 0.0f );
+				eb.va.glv; eb.vb.glv; ecenter.glv;
+				glEnd( );
+				glPopName( );
+				
+				//writefln( "(%s) %s, %s, %s", real_edges, ea, eb, ec );
+			}
+			
+			else if ( real_edges == 1 )
+			{
+				throw new Exception( "Encountered a sub-triangle with only 1 real edge. Was triangulation implemented without adding edge detection code for this case? Oops!" );
+			}
+		}
+		
+		/*return;
+		
+		////// OLD //////
 		Vertex center = new Vertex( null, 0, 0, 0 );
 		foreach ( v; verts )
 			center += v;
@@ -323,7 +607,7 @@ class Face
 		glColor3f( 0.0f, 0.0f, 1.0f );
 		vc.glv; va.glv; center.glv;
 		glEnd( );
-		glPopName( );
+		glPopName( );*/
 	}
 	
 	void renderFaceSelect( int selectMode )
@@ -365,14 +649,14 @@ class Body
 		i = addVertex( 0.0f,  2.0f,  0.0f ); // rear bottom right
 		
 		Face fa;
-		fa = addFace( 4, a, c, d, b );
-		fa = addFace( 4, a, b, f, e );
+		fa = addFace( 4, a, b, d, c );
+		fa = addFace( 4, f, b, a, e );
 		fa = addFace( 4, c, d, h, g );
-		fa = addFace( 4, e, f, h, g );
+		fa = addFace( 4, e, g, h, f );
 		//fa = addFace( 4, a, e, g, c );
 		fa = addFace( 4, b, f, h, d );
 		
-		fa = addFace( 3, a, i, c );
+		fa = addFace( 3, c, i, a );
 		fa = addFace( 3, e, i, g );
 		fa = addFace( 3, a, i, e );
 		fa = addFace( 3, g, i, c );
@@ -443,7 +727,7 @@ class Body
 		{
 			glPushName( cast(int)this );
 			
-			render( aEditNone ); // render as usual
+			render( EditMode.None ); // render as usual
 			
 			glPopName( );
 		}
@@ -459,10 +743,13 @@ class Body
 	
 	void render( int editMode )
 	{
+		glEnable(GL_POLYGON_OFFSET_FILL);
+		glPolygonOffset(1.0f, 1.0f);
+		
 		glBegin( GL_TRIANGLES );
 		foreach ( f; faces )
 		{
-			if ( editMode == aEditFace )
+			if ( editMode == EditMode.Face )
 			{
 				float r, g, b;
 				float w = 1.0f;
@@ -486,7 +773,7 @@ class Body
 				glColor4f( r, g, b, 1.0 );
 			}
 			else
-				glColor4f( f.colour.r, f.colour.g, f.colour.b, f.colour.a );
+				glColor4f( 0.5, 0.5, 0.5, 1 );
 			
 			foreach ( t; f.tris )
 			{
@@ -499,6 +786,8 @@ class Body
 		
 		//glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
+		glEnable(GL_POLYGON_OFFSET_LINE);
+		glPolygonOffset(-1.0f, -1.0f);
 		
 		glEnable(GL_NORMALIZE);
 		foreach ( f; faces )
@@ -509,15 +798,19 @@ class Body
 				float w = 1.0f;
 				
 				r = g = b = 0.0f;
-				if ( e.hot )
+				
+				if ( editMode == EditMode.Edge )
 				{
-					g = 0.5;
-					w = 3.0;
-				}
-				if ( e.selected )
-				{
-					r = 0.8;
-					w = 3.0;
+					if ( e.hot )
+					{
+						g = 0.5;
+						w = 2.0;
+					}
+					if ( e.selected )
+					{
+						r = 0.8;
+						w = 2.0;
+					}
 				}
 			
 				glColor3f( r, g, b );
@@ -530,31 +823,45 @@ class Body
 			}
 		}
 		
-		if ( editMode == aEditVertex )
+		if ( editMode == EditMode.Vertex )
 		{
-			glPointSize(4.0);
-		
-			glBegin( GL_POINTS );
+			glEnable(GL_POLYGON_OFFSET_POINT);
+			glPolygonOffset(5.0f, 5.0f);
+			
 			foreach ( f; faces )
 			{
 				foreach ( v; f.verts )
 				{
 					float r, g, b;
+					float s = 4.0;
 					r = g = b = 0.0f;
 					if ( v.hot )
+					{
 						g = 0.5;
+						s = 5;
+					}
 					if ( v.selected )
+					{
 						r = 0.8;
+						s = 5;
+					}
 				
+					glPointSize( s );
+
+					glBegin( GL_POINTS );
 					glColor3f( r, g, b );
-				
 					glVertex3f( v.x, v.y, v.z );
+					glEnd( );
 				}
 			}
-			glEnd( );
 		}
 		
-		//renderSelect( aEditFace );
+		/*
+		foreach ( f; faces )
+		{
+			// render in face mode, rest done later
+			f.renderFaceSelectEdge( );
+		}*/
 		
 		//foreach ( f; faces ) f.renderFaceSelectVertex( );
 	}

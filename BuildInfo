@@ -8,6 +8,9 @@ targets
 		sources
 			src/app.d
 			src/aura/model.d
+			src/aura/selection.d
+			src/aura/editing.d
+			src/aura/camera.d
 			src/opengl/gl.d
 			src/claro/core.d
 			src/claro/base/all.d
@@ -48,6 +51,7 @@ targets
 			src/claro/graphics/widget.d
 			src/claro/graphics/widgets/button.d
 			src/claro/graphics/widgets/canvas.d
+			src/claro/graphics/widgets/combo.d
 			src/claro/graphics/widgets/menubar.d
 			src/claro/graphics/widgets/opengl.d
 			src/claro/graphics/widgets/textbox.d

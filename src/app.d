@@ -98,31 +98,36 @@ class AuraWindow : WindowWidget {
 		face_menu = new MenuWidget( this.ogl );
 		ListItem i, ii;
 		
-		i = face_menu.appendItem( "Move" );
+		//i = face_menu.appendItem( "Move" );
 		
-		ii = face_menu.appendItem( i, "Normal" );
-		ii.appdata = box(new MoveOperation(MoveOperation.DirectionN));
-		ii.add_handler( "pushed", &this.runOperation );
+		ListItem appendTo( MenuWidget menu, ListItem parent, char[] title, Operation op=null )
+		{
+			ListItem li;
+			
+			li = menu.appendItem( parent, title );
+			
+			if ( op !is null )
+			{
+				li.appdata = box( op );
+				li.add_handler( "pushed", &this.runOperation );
+			}
+			
+			return li;
+		}
 		
-		ii = face_menu.appendItem( i, "X" );
-		ii.appdata = box(new MoveOperation(MoveOperation.DirectionX));
-		ii.add_handler( "pushed", &this.runOperation );
+		ListItem appendToP( MenuWidget menu, char[] title, Operation op=null )
+		{
+			return appendTo( menu, null, title, op );
+		}
 		
-		ii = face_menu.appendItem( i, "Y" );
-		ii.appdata = box(new MoveOperation(MoveOperation.DirectionY));
-		ii.add_handler( "pushed", &this.runOperation );
+		i = appendToP( face_menu, "Move" );
+			appendTo( face_menu, i, "Normal", new MoveOperation(MoveOperation.DirectionN) );
+			appendTo( face_menu, i, "X", new MoveOperation(MoveOperation.DirectionX) );
+			appendTo( face_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
+			appendTo( face_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
 		
-		ii = face_menu.appendItem( i, "Z" );
-		ii.appdata = box(new MoveOperation(MoveOperation.DirectionZ));
-		ii.add_handler( "pushed", &this.runOperation );
-		
-		i = face_menu.appendItem( "Inset" );
-		i.appdata = box(new InsetOperation);
-		i.add_handler( "pushed", &this.runOperation );
-		
-		i = face_menu.appendItem( "Extrude" );
-		i.appdata = box(new ExtrudeOperation);
-		i.add_handler( "pushed", &this.runOperation );
+		appendToP( face_menu, "Inset", new InsetOperation );
+		appendToP( face_menu, "Extrude", new ExtrudeOperation );
 	}
 	
 	Operation curr_op;

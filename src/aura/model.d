@@ -377,6 +377,8 @@ class Face
 		
 		normal /= tris.length;
 		
+		normal.normalize();
+		
 		return normal;
 	}
 	

@@ -58,7 +58,7 @@ class ExtrudeFace
 		Vertex tmp = new Vertex( null, 0, 0, 0 );
 		Normal n = face.calculateNormal( );
 		
-		value *= 5;
+		value *= 2;
 		
 		foreach ( a, v; face.verts )
 		{

@@ -432,6 +432,11 @@ class Face
 		
 		verts.length = vl+1;
 		verts[vl] = v;
+		
+		if ( v == null )
+		{
+			throw new Exception( "Attempt to append a null vertex to face with length " ~ std.string.toString(vl) );
+		}
 	}
 	
 	void computeEdges( )

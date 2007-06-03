@@ -632,6 +632,9 @@ class Body
 	Vertex verts[];
 	Face faces[];
 	
+	bool selected = false;
+	bool hot = false;
+	
 	this()
 	{
 		Vertex a, b, c, d, e, f, g, h, i;
@@ -747,32 +750,43 @@ class Body
 		glPolygonOffset(1.0f, 1.0f);
 		
 		glBegin( GL_TRIANGLES );
+		
+		if ( editMode == EditMode.Body )
+		{
+			float r, g, b;
+			
+			r = g = b = 0.0f;
+			if ( this.hot )
+				g = 0.4;
+			
+			if ( this.selected )
+				r = 0.5;
+			
+			if ( !this.selected && !this.hot )
+				r = g = b = 0.5f;
+			
+			glColor4f( r, g, b, 1.0 );
+		}
+		
 		foreach ( f; faces )
 		{
 			if ( editMode == EditMode.Face )
 			{
 				float r, g, b;
-				float w = 1.0f;
 				
 				r = g = b = 0.0f;
 				if ( f.hot )
-				{
 					g = 0.4;
-					w = 3.0;
-				}
 				
 				if ( f.selected )
-				{
 					r = 0.5;
-					w = 3.0;
-				}
 				
 				if ( !f.selected && !f.hot )
 					r = g = b = 0.5f;
 				
 				glColor4f( r, g, b, 1.0 );
 			}
-			else
+			else if ( editMode != EditMode.Body )
 				glColor4f( 0.5, 0.5, 0.5, 1 );
 			
 			foreach ( t; f.tris )

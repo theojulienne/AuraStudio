@@ -46,7 +46,7 @@ class AuraWindow : WindowWidget {
 		ListItem n, m;
 		
 		mode = new ComboWidget( this, lt.bounds("mode") );
-		n = mode.appendItem( "Object" );
+		n = mode.appendItem( "Body" );
 		n.appdata = box(EditMode.Body);
 		n = mode.appendItem( "Face" );
 		n.appdata = box(EditMode.Face);
@@ -190,6 +190,20 @@ class AuraWindow : WindowWidget {
 			v_hot = v;
 			v_hot.hot = true;
 		}
+		
+		else
+		{
+			Body b = pickBody( x, y );
+
+			if ( b_hot !is null )
+				b_hot.hot = false;
+
+			if ( b is null )
+				return;
+
+			b_hot = b;
+			b_hot.hot = true;
+		}
 	}
 	
 	void clicked( CEvent evt, CObject obj )
@@ -223,9 +237,18 @@ class AuraWindow : WindowWidget {
 				v.selected = !v.selected;
 			}
 		}
+		
+		else
+		{
+			Body b = pickBody( x, y );
+			if ( b !is null )
+			{
+				b.selected = !b.selected;
+			}
+		}
 	}
 	
-	Body pickObject( int x, int y )
+	Body pickBody( int x, int y )
 	{
 		Object o;
 		

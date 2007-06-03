@@ -59,6 +59,20 @@ class MoveOperation : Operation
 				}
 			}
 		}
+		else if ( emode == EditMode.Body )
+		{
+			foreach ( b; sel.sel_bodies )
+			{
+				foreach ( f; b.faces )
+				{
+					foreach ( v; f.verts )
+					{
+						if ( verts.find( v ) == -1 )
+							verts.append( v );
+					}
+				}
+			}
+		}
 		
 		orig_verts = new List!(Vertex);
 		foreach ( v; verts )

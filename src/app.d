@@ -86,6 +86,8 @@ class AuraWindow : WindowWidget {
 		this.gl_resized( null, this.ogl );
 	}
 	
+	MenuWidget body_menu, face_menu, edge_menu, verts_menu;
+	
 	MenuBarWidget mb;
 	void make_menu( ) {
 		this.mb = new MenuBarWidget( this );
@@ -95,7 +97,10 @@ class AuraWindow : WindowWidget {
 		file_quit.add_handler( "pushed", &this.closed );
 		
 		
+		body_menu = new MenuWidget( this.ogl );
 		face_menu = new MenuWidget( this.ogl );
+		edge_menu = new MenuWidget( this.ogl );
+		verts_menu = new MenuWidget( this.ogl );
 		ListItem i, ii;
 		
 		//i = face_menu.appendItem( "Move" );
@@ -128,6 +133,24 @@ class AuraWindow : WindowWidget {
 		
 		appendToP( face_menu, "Inset", new InsetOperation );
 		appendToP( face_menu, "Extrude", new ExtrudeOperation );
+		
+		i = appendToP( edge_menu, "Move" );
+			appendTo( edge_menu, i, "Normal", new MoveOperation(MoveOperation.DirectionN) );
+			appendTo( edge_menu, i, "X", new MoveOperation(MoveOperation.DirectionX) );
+			appendTo( edge_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
+			appendTo( edge_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
+		
+		i = appendToP( verts_menu, "Move" );
+			appendTo( verts_menu, i, "Normal", new MoveOperation(MoveOperation.DirectionN) );
+			appendTo( verts_menu, i, "X", new MoveOperation(MoveOperation.DirectionX) );
+			appendTo( verts_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
+			appendTo( verts_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
+		
+		i = appendToP( body_menu, "Move" );
+			appendTo( body_menu, i, "Normal", new MoveOperation(MoveOperation.DirectionN) );
+			appendTo( body_menu, i, "X", new MoveOperation(MoveOperation.DirectionX) );
+			appendTo( body_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
+			appendTo( body_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
 	}
 	
 	Operation curr_op;
@@ -142,12 +165,17 @@ class AuraWindow : WindowWidget {
 		//writefln( "%s", classname );
 	}
 	
-	MenuWidget face_menu;
 	void context( CEvent evt, CObject obj )
 	{
 		sel.clearHot( );
-		if ( edmode == EditMode.Face )
+		if ( edmode == EditMode.Body )
+			body_menu.popup( );
+		else if ( edmode == EditMode.Face )
 			face_menu.popup( );
+		else if ( edmode == EditMode.Edge )
+			edge_menu.popup( );
+		else if ( edmode == EditMode.Vertex )
+			verts_menu.popup( );
 	}
 	
 	EditMode edmode;

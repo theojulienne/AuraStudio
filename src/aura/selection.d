@@ -4,6 +4,7 @@ import std.stdio;
 
 import aura.model;
 import aura.editing;
+import aura.list;
 
 enum
 {
@@ -23,10 +24,18 @@ class Selection
 	
 	EditMode mode;
 	
-	Face[] sel_faces;
-	Edge[] sel_edges;
-	Vertex[] sel_verts;
-	Body[] sel_bodies;
+	List!(Face) sel_faces;
+	List!(Edge) sel_edges;
+	List!(Vertex) sel_verts;
+	List!(Body) sel_bodies;
+	
+	this( )
+	{
+		sel_faces = new List!(Face);
+		sel_edges = new List!(Edge);
+		sel_verts = new List!(Vertex);
+		sel_bodies = new List!(Body);
+	}
 	
 	void resetSelection( )
 	{
@@ -42,30 +51,30 @@ class Selection
 		foreach ( b; sel_bodies )
 			b.selected = false;
 		
-		sel_faces = null;
-		sel_edges = null;
-		sel_verts = null;
-		sel_bodies = null;
+		sel_faces = new List!(Face);
+		sel_edges = new List!(Edge);
+		sel_verts = new List!(Vertex);
+		sel_bodies = new List!(Body);
 	}
 	
 	Face[] getFaces( )
 	{
-		return sel_faces;
+		return sel_faces.get;
 	}
 	
 	Edge[] getEdges( )
 	{
-		return sel_edges;
+		return sel_edges.get;
 	}
 	
 	Vertex[] getVerts( )
 	{
-		return sel_verts;
+		return sel_verts.get;
 	}
 	
 	Body[] getBodies( )
 	{
-		return sel_bodies;
+		return sel_bodies.get;
 	}
 	
 	void clearHot( )
@@ -150,24 +159,9 @@ class Selection
 			f.selected = !f.selected;
 			
 			if ( f.selected )
-			{
-				int l = sel_faces.length;
-				sel_faces.length = l+1;
-				sel_faces[l] = f;
-			}
+				sel_faces.append( f );
 			else
-			{
-				foreach ( a, sf; sel_faces )
-				{
-					if ( sf == f )
-					{
-						auto n = sel_faces[0..a];
-						auto m = sel_faces[a+1..length];
-						sel_faces = n ~ m;
-						break;
-					}
-				}
-			}
+				sel_faces.remove( f );
 		}
 	}
 	
@@ -176,6 +170,11 @@ class Selection
 		if ( e !is null )
 		{
 			e.selected = !e.selected;
+			
+			if ( e.selected )
+				sel_edges.append( e );
+			else
+				sel_edges.remove( e );
 		}
 	}
 	
@@ -184,6 +183,11 @@ class Selection
 		if ( v !is null )
 		{
 			v.selected = !v.selected;
+			
+			if ( v.selected )
+				sel_verts.append( v );
+			else
+				sel_verts.remove( v );
 		}
 	}
 	
@@ -192,6 +196,11 @@ class Selection
 		if ( b !is null )
 		{
 			b.selected = !b.selected;
+			
+			if ( b.selected )
+				sel_bodies.append( b );
+			else
+				sel_bodies.remove( b );
 		}
 	}
 }

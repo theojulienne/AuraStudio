@@ -152,53 +152,61 @@ class Selection
 		b_hot.hot = true;
 	}
 	
-	void select( Face f )
+	void select( Face f, bool toggle=true, bool set=false )
 	{
 		if ( f !is null )
 		{
 			f.selected = !f.selected;
 			
+			if ( !toggle ) f.selected = set;
+			
 			if ( f.selected )
-				sel_faces.append( f );
+				sel_faces.appendUnique( f );
 			else
 				sel_faces.remove( f );
 		}
 	}
 	
-	void select( Edge e )
+	void select( Edge e, bool toggle=true, bool set=false )
 	{
 		if ( e !is null )
 		{
 			e.selected = !e.selected;
 			
+			if ( !toggle ) e.selected = set;
+			
 			if ( e.selected )
-				sel_edges.append( e );
+				sel_edges.appendUnique( e );
 			else
 				sel_edges.remove( e );
 		}
 	}
 	
-	void select( Vertex v )
+	void select( Vertex v, bool toggle=true, bool set=false )
 	{
 		if ( v !is null )
 		{
 			v.selected = !v.selected;
 			
+			if ( !toggle ) v.selected = set;
+			
 			if ( v.selected )
-				sel_verts.append( v );
+				sel_verts.appendUnique( v );
 			else
 				sel_verts.remove( v );
 		}
 	}
 	
-	void select( Body b )
+	void select( Body b, bool toggle=true, bool set=false )
 	{
 		if ( b !is null )
 		{
 			b.selected = !b.selected;
 			
+			if ( !toggle ) b.selected = set;
+			
 			if ( b.selected )
-				sel_bodies.append( b );
+				sel_bodies.appendUnique( b );
 			else
 				sel_bodies.remove( b );
 		}

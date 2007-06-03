@@ -78,6 +78,7 @@ class AuraWindow : WindowWidget {
 		
 		this.ogl.add_handler( "resized", &this.gl_resized );
 		this.ogl.add_handler( "clicked", &this.clicked );
+		this.ogl.add_handler( "released", &this.released );
 		this.ogl.add_handler( "mouse_moved", &this.mousemoved );
 		this.ogl.add_handler( "middle_clicked", &this.middleclicked );
 		this.ogl.add_handler( "middle_released", &this.middlereleased );
@@ -248,28 +249,50 @@ class AuraWindow : WindowWidget {
 		if ( edmode == EditMode.Face )
 		{
 			Face f = pickFace( x, y );
+			
+			if ( is_select_running )
+				sel.select( f, false, select_in_path );
+			
 			sel.makeHot( f );
 		}
 		
 		else if ( edmode == EditMode.Edge )
 		{
 			Edge e = pickEdge( x, y );
+			
+			if ( is_select_running )
+				sel.select( e, false, select_in_path );
+			
 			sel.makeHot( e );
 		}
 		
 		else if ( edmode == EditMode.Vertex )
 		{
 			Vertex v = pickVertex( x, y );
+			
+			if ( is_select_running )
+				sel.select( v, false, select_in_path );
+			
 			sel.makeHot( v );
 		}
 		
 		else
 		{
 			Body b = pickBody( x, y );
+			
+			if ( is_select_running )
+				sel.select( b, false, select_in_path );
+			
 			sel.makeHot( b );
 		}
 	}
 	
+	bool is_select_running = false;
+	bool select_in_path = false;
+	void released( CEvent evt, CObject obj )
+	{
+		is_select_running = false;
+	}
 	void clicked( CEvent evt, CObject obj )
 	{
 		int x = evt.getArgumentAsInt("x");
@@ -288,11 +311,13 @@ class AuraWindow : WindowWidget {
 		{
 			Face f = pickFace( x, y );
 			sel.select( f );
+			if ( f !is null ) { select_in_path = f.selected; is_select_running = true; }
 		}
 		
 		else if ( edmode == EditMode.Edge )
 		{
 			Edge e = pickEdge( x, y );
+			if ( e !is null ) { select_in_path = e.selected; is_select_running = true; }
 			sel.select( e );
 		}
 		
@@ -300,12 +325,14 @@ class AuraWindow : WindowWidget {
 		{
 			Vertex v = pickVertex( x, y );
 			sel.select( v );
+			if ( v !is null ) { select_in_path = v.selected; is_select_running = true; }
 		}
 		
 		else
 		{
 			Body b = pickBody( x, y );
 			sel.select( b );
+			if ( b !is null ) { select_in_path = b.selected; is_select_running = true; }
 		}
 	}
 	

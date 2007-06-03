@@ -11,6 +11,14 @@ class List(T)
 		l[n] = i;
 	}
 	
+	void appendUnique( T i )
+	{
+		if ( find( i ) != -1 )
+			return;
+		
+		append( i );
+	}
+	
 	int find( T i )
 	{
 		foreach ( a, ti; l )

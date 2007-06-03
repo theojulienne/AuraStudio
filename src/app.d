@@ -16,6 +16,7 @@ import std.date;
 import std.conv;
 import std.random;
 import std.boxer;
+import std.gc;
 
 import aura.model;
 
@@ -246,6 +247,10 @@ class AuraWindow : WindowWidget {
 		if ( x < 0 || y < 0 || x > ogl.bounds.width || y > ogl.bounds.height )
 			return;
 		
+		// temporarily disable the GC; otherwise issues happen with the opengl picking
+		// and object->int casting.. yes, this is a lazy fix.
+		std.gc.disable( );
+		
 		if ( edmode == EditMode.Face )
 		{
 			Face f = pickFace( x, y );
@@ -285,6 +290,8 @@ class AuraWindow : WindowWidget {
 			
 			sel.makeHot( b );
 		}
+		
+		std.gc.enable( );
 	}
 	
 	bool is_select_running = false;
@@ -307,6 +314,10 @@ class AuraWindow : WindowWidget {
 			return;
 		}
 		
+		
+		// temporarily disable the GC; otherwise issues happen with the opengl picking
+		// and object->int casting.. yes, this is a lazy fix.
+		std.gc.disable( );
 		if ( edmode == EditMode.Face )
 		{
 			Face f = pickFace( x, y );
@@ -334,6 +345,7 @@ class AuraWindow : WindowWidget {
 			sel.select( b );
 			if ( b !is null ) { select_in_path = b.selected; is_select_running = true; }
 		}
+		std.gc.enable( );
 	}
 	
 	Body pickBody( int x, int y )

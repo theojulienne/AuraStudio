@@ -22,6 +22,7 @@ import aura.model;
 import aura.operation;
 import aura.operations.inset;
 import aura.operations.extrude;
+import aura.operations.move;
 
 class AuraWindow : WindowWidget {
 	Body model;
@@ -95,7 +96,25 @@ class AuraWindow : WindowWidget {
 		
 		
 		face_menu = new MenuWidget( this.ogl );
-		ListItem i;
+		ListItem i, ii;
+		
+		i = face_menu.appendItem( "Move" );
+		
+		ii = face_menu.appendItem( i, "Normal" );
+		ii.appdata = box(new MoveOperation(MoveOperation.DirectionN));
+		ii.add_handler( "pushed", &this.runOperation );
+		
+		ii = face_menu.appendItem( i, "X" );
+		ii.appdata = box(new MoveOperation(MoveOperation.DirectionX));
+		ii.add_handler( "pushed", &this.runOperation );
+		
+		ii = face_menu.appendItem( i, "Y" );
+		ii.appdata = box(new MoveOperation(MoveOperation.DirectionY));
+		ii.add_handler( "pushed", &this.runOperation );
+		
+		ii = face_menu.appendItem( i, "Z" );
+		ii.appdata = box(new MoveOperation(MoveOperation.DirectionZ));
+		ii.add_handler( "pushed", &this.runOperation );
 		
 		i = face_menu.appendItem( "Inset" );
 		i.appdata = box(new InsetOperation);
@@ -135,6 +154,7 @@ class AuraWindow : WindowWidget {
 		
 		edmode = unbox!(EditMode)( i.appdata );
 		sel.resetSelection( );
+		sel.mode = edmode;
 	}
 	
 	bool middle_tracking;

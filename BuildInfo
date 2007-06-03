@@ -14,6 +14,7 @@ targets
 			src/aura/operation.d
 			src/aura/operations/inset.d
 			src/aura/operations/extrude.d
+			src/aura/operations/move.d
 			src/opengl/gl.d
 			src/claro/core.d
 			src/claro/base/all.d

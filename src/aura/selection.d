@@ -3,6 +3,7 @@ module aura.selection;
 import std.stdio;
 
 import aura.model;
+import aura.editing;
 
 enum
 {
@@ -19,6 +20,8 @@ class Selection
 	Edge e_hot = null;
 	Face f_hot = null;
 	Body b_hot = null;
+	
+	EditMode mode;
 	
 	Face[] sel_faces;
 	Edge[] sel_edges;

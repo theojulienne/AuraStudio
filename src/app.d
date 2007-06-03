@@ -19,6 +19,9 @@ import std.boxer;
 
 import aura.model;
 
+import aura.operation;
+import aura.operations.inset;
+
 class AuraWindow : WindowWidget {
 	Body model;
 	
@@ -27,6 +30,9 @@ class AuraWindow : WindowWidget {
 	TextBoxWidget tb_r, tb_R, tb_d;
 	ComboWidget mode;
 	Layout lt;
+	
+	Selection sel;
+	
 	this( ) {
 		super( null, new Bounds( 100, 50, 1024, 768 ), 0 );
 		
@@ -38,20 +44,22 @@ class AuraWindow : WindowWidget {
 		
 		this.add_handler( "destroy", &this.closed );
 		
-		this.make_menu( );
-		
 		this.ogl = new OpenGLWidget( this, lt.bounds("clock") );
 		this.ogl.redrawDelegate = &this.gl_redraw;
+		
+		this.make_menu( );
+		
+		sel = new Selection;
 		
 		ListItem n, m;
 		
 		mode = new ComboWidget( this, lt.bounds("mode") );
 		n = mode.appendItem( "Body" );
 		n.appdata = box(EditMode.Body);
-		n = mode.appendItem( "Face" );
-		n.appdata = box(EditMode.Face);
-		m = mode.appendItem( "Edge" );
-		m.appdata = box(EditMode.Edge);
+		m = mode.appendItem( "Face" );
+		m.appdata = box(EditMode.Face);
+		n = mode.appendItem( "Edge" );
+		n.appdata = box(EditMode.Edge);
 		n = mode.appendItem( "Vertex" );
 		n.appdata = box(EditMode.Vertex);
 		mode.add_handler( "selected", &this.mode_selected );
@@ -72,6 +80,7 @@ class AuraWindow : WindowWidget {
 		this.ogl.add_handler( "middle_clicked", &this.middleclicked );
 		this.ogl.add_handler( "middle_released", &this.middlereleased );
 		this.ogl.add_handler( "scroll_wheel", &this.scrollwheel );
+		this.ogl.add_handler( "right_clicked", &this.context );
 		this.gl_resized( null, this.ogl );
 	}
 	
@@ -82,6 +91,35 @@ class AuraWindow : WindowWidget {
 		auto file_quit = this.mb.appendItem( file_menu, Stock.getImage("system-log-out", StockSize.Menu), "Quit" );
 		this.mb.addKeyBinding( file_quit, "Q", MenuBarWidget.ModifierCommand );
 		file_quit.add_handler( "pushed", &this.closed );
+		
+		
+		face_menu = new MenuWidget( this.ogl );
+		ListItem i;
+		
+		i = face_menu.appendItem( "Inset" );
+		writefln( "%s", i );
+		i.appdata = box(new InsetOperation);
+		i.add_handler( "pushed", &this.runOperation );
+	}
+	
+	Operation curr_op;
+	
+	void runOperation( CEvent evt, CObject obj )
+	{
+		Operation c = unbox!(Operation)(obj.appdata);
+		if ( c.prepare( sel ) )
+			curr_op = c;
+		else
+			c.cleanup( );
+		//writefln( "%s", classname );
+	}
+	
+	MenuWidget face_menu;
+	void context( CEvent evt, CObject obj )
+	{
+		sel.clearHot( );
+		if ( edmode == EditMode.Face )
+			face_menu.popup( );
 	}
 	
 	EditMode edmode;
@@ -92,6 +130,7 @@ class AuraWindow : WindowWidget {
 		if ( i is null ) return;
 		
 		edmode = unbox!(EditMode)( i.appdata );
+		sel.resetSelection( );
 	}
 	
 	bool middle_tracking;
@@ -121,17 +160,10 @@ class AuraWindow : WindowWidget {
 		cam.dist -= delta;
 	}
 	
-	Vertex v_hot = null;
-	Edge e_hot = null;
-	Face f_hot = null;
-	Body b_hot = null;
 	void mousemoved( CEvent evt, CObject obj )
 	{
 		int x = evt.getArgumentAsInt("x");
 		int y = evt.getArgumentAsInt("y");
-		
-		if ( x < 0 || y < 0 || x > ogl.bounds.width || y > ogl.bounds.height )
-			return;
 		
 		if ( middle_tracking )
 		{
@@ -147,62 +179,37 @@ class AuraWindow : WindowWidget {
 			cam.spin_vert -= b * 0.5f;
 			
 			return;
+		} else if ( curr_op !is null )
+		{
+			curr_op.updateFromMouse( x, y );
+			return;
 		}
+		
+		if ( x < 0 || y < 0 || x > ogl.bounds.width || y > ogl.bounds.height )
+			return;
 		
 		if ( edmode == EditMode.Face )
 		{
 			Face f = pickFace( x, y );
-		
-			if ( f_hot !is null )
-				f_hot.hot = false;
-			
-			if ( f is null )
-				return;
-			
-				f_hot = f;
-				f_hot.hot = true;
+			sel.makeHot( f );
 		}
 		
 		else if ( edmode == EditMode.Edge )
 		{
 			Edge e = pickEdge( x, y );
-
-			if ( e_hot !is null )
-				e_hot.hot = false;
-
-			if ( e is null )
-				return;
-
-			e_hot = e;
-			e_hot.hot = true;
+			sel.makeHot( e );
 		}
 		
 		else if ( edmode == EditMode.Vertex )
 		{
 			Vertex v = pickVertex( x, y );
-
-			if ( v_hot !is null )
-				v_hot.hot = false;
-
-			if ( v is null )
-				return;
-
-			v_hot = v;
-			v_hot.hot = true;
+			sel.makeHot( v );
 		}
 		
 		else
 		{
 			Body b = pickBody( x, y );
-
-			if ( b_hot !is null )
-				b_hot.hot = false;
-
-			if ( b is null )
-				return;
-
-			b_hot = b;
-			b_hot.hot = true;
+			sel.makeHot( b );
 		}
 	}
 	
@@ -211,40 +218,37 @@ class AuraWindow : WindowWidget {
 		int x = evt.getArgumentAsInt("x");
 		int y = evt.getArgumentAsInt("y");
 		
+		if ( curr_op !is null )
+		{
+			curr_op.complete( );
+			curr_op.cleanup( );
+			curr_op = null;
+			mousemoved( evt, obj );
+			return;
+		}
+		
 		if ( edmode == EditMode.Face )
 		{
 			Face f = pickFace( x, y );
-			if ( f !is null )
-			{
-				f.selected = !f.selected;
-			}
+			sel.select( f );
 		}
 		
 		else if ( edmode == EditMode.Edge )
 		{
 			Edge e = pickEdge( x, y );
-			if ( e !is null )
-			{
-				e.selected = !e.selected;
-			}
+			sel.select( e );
 		}
 		
 		else if ( edmode == EditMode.Vertex )
 		{
 			Vertex v = pickVertex( x, y );
-			if ( v !is null )
-			{
-				v.selected = !v.selected;
-			}
+			sel.select( v );
 		}
 		
 		else
 		{
 			Body b = pickBody( x, y );
-			if ( b !is null )
-			{
-				b.selected = !b.selected;
-			}
+			sel.select( b );
 		}
 	}
 	

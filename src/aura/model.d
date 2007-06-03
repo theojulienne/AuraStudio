@@ -29,14 +29,45 @@ class Vertex
 	Face faces[];
 	Edge edges[];
 	
+	void cleanReferencesToFace( Face f )
+	{
+		foreach ( a, tf; faces )
+		{
+			if ( tf != f )
+				continue;
+			
+			auto n = faces[0..a];
+			auto m = faces[a+1..length];
+			faces = n ~ m;
+			break;
+		}
+		
+		if ( faces.length == 0 )
+		{
+			// edge gone
+		}
+	}
+	
 	this() { this(null,0,0,0); }
 	
-	this( Body _b, float _x, float _y, float _z )
+	this( Body _b, float _x=0, float _y=0, float _z=0 )
 	{
 		p_body = _b;
 		x = _x;
 		y = _y;
 		z = _z;
+	}
+	
+	this( Vertex src, bool copy_refs=false )
+	{
+		this( null, 0, 0, 0 );
+		
+		this += src;
+		
+		if ( copy_refs )
+		{
+			// copy body and/or faces and/or edges here.. whatever is sane?
+		}
 	}
 	
 	void zero( )
@@ -58,6 +89,15 @@ class Vertex
 		return 0;
 	}
 	
+	int opSubAssign( Vertex o )
+	{
+		x -= o.x;
+		y -= o.y;
+		z -= o.z;
+		
+		return 0;
+	}
+	
 	int opDivAssign( float n )
 	{
 		x /= n;
@@ -65,6 +105,32 @@ class Vertex
 		z /= n;
 		
 		return 0;
+	}
+	
+	int opMulAssign( float n )
+	{
+		x *= n;
+		y *= n;
+		z *= n;
+		
+		return 0;
+	}
+	
+	void setTo( Vertex v )
+	{
+		x = v.x;
+		y = v.y;
+		z = v.z;
+	}
+	
+	Vertex opSub( Vertex v )
+	{
+		Vertex nv = new Vertex( null, 0, 0, 0 );
+		
+		nv += this;
+		nv -= v;
+		
+		return nv;
 	}
 	
 	static Vertex makeCenterOf( Vertex a, Vertex b )
@@ -96,6 +162,25 @@ class Edge
 	
 	bool selected = false;
 	bool hot = false;
+	
+	void cleanReferencesToFace( Face f )
+	{
+		foreach ( a, tf; faces )
+		{
+			if ( tf != f )
+				continue;
+			
+			auto n = faces[0..a];
+			auto m = faces[a+1..length];
+			faces = n ~ m;
+			break;
+		}
+		
+		if ( faces.length == 0 )
+		{
+			// edge gone
+		}
+	}
 	
 	this( Vertex a, Vertex b )
 	{
@@ -184,10 +269,21 @@ class Face
 	
 	SubTri tris[];
 	
+	Body f_body;
+	
 	Colour colour;
 	
 	bool selected = false;
 	bool hot = false;
+	
+	void cleanReferences( )
+	{
+		foreach ( v; verts )
+			v.cleanReferencesToFace( this );
+		
+		foreach ( e; edges )
+			e.cleanReferencesToFace( this );
+	}
 	
 	void rebuildTris( )
 	{
@@ -702,6 +798,7 @@ class Body
 		
 		faces.length = f+1;
 		faces[f] = new Face;
+		faces[f].f_body = this;
 		
 		foreach ( v; fverts )
 			faces[f].addVertex( v );
@@ -713,6 +810,23 @@ class Body
 		*/
 		
 		return faces[f];
+	}
+	
+	void removeFace( Face f )
+	{
+		// remove the face from the faces list
+		foreach ( a, sf; faces )
+		{
+			if ( sf == f )
+			{
+				auto n = faces[0..a];
+				auto m = faces[a+1..length];
+				faces = n ~ m;
+				break;
+			}
+		}
+		
+		f.cleanReferences( );
 	}
 	
 	// renders a single face, with all transformations, and

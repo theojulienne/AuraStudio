@@ -1009,6 +1009,8 @@ class Body
 			
 			foreach ( t; f.tris )
 			{
+				if ( t.verts[0] is null || t.verts[1] is null || t.verts[2] is null )
+					continue; // bandaid to fix strange crashes
 				t.verts[0].glv;
 				t.verts[1].glv;
 				t.verts[2].glv;

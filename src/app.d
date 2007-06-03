@@ -21,6 +21,7 @@ import aura.model;
 
 import aura.operation;
 import aura.operations.inset;
+import aura.operations.extrude;
 
 class AuraWindow : WindowWidget {
 	Body model;
@@ -97,8 +98,11 @@ class AuraWindow : WindowWidget {
 		ListItem i;
 		
 		i = face_menu.appendItem( "Inset" );
-		writefln( "%s", i );
 		i.appdata = box(new InsetOperation);
+		i.add_handler( "pushed", &this.runOperation );
+		
+		i = face_menu.appendItem( "Extrude" );
+		i.appdata = box(new ExtrudeOperation);
 		i.add_handler( "pushed", &this.runOperation );
 	}
 	

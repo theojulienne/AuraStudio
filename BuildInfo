@@ -13,6 +13,7 @@ targets
 			src/aura/camera.d
 			src/aura/operation.d
 			src/aura/operations/inset.d
+			src/aura/operations/extrude.d
 			src/opengl/gl.d
 			src/claro/core.d
 			src/claro/base/all.d

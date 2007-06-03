@@ -6,6 +6,8 @@ import aura.editing;
 private import opengl.gl;
 private import std.stdio;
 
+import std.math;
+
 struct Colour
 {
 	float r, g, b, a;
@@ -13,6 +15,81 @@ struct Colour
 	void set( float _r, float _g, float _b, float _a=1.0f )
 	{
 		r = _r; g = _g; b = _b; a = _a;
+	}
+}
+
+struct Normal
+{
+	float x, y, z;
+	
+	void normalize( )
+	{
+		float length;
+		
+		length = cast(float)sqrt((x*x) + (y*y) + (z*z));
+
+		if(length == 0.0f)						// Prevents Divide By 0 Error By Providing
+			length = 1.0f;						// An Acceptable Value For Vectors To Close To 0.
+
+		x /= length;						// Dividing Each Element By
+		y /= length;						// The Length Results In A
+		z /= length;						// Unit Normal Vector.
+	}
+	
+	int opAssign( Vertex v )
+	{
+		
+		return 0;
+	}
+	
+	void zero( )
+	{
+		x = y = z = 0;
+	}
+	
+	int opSubAssign( Vertex v )
+	{
+		x -= v.x;
+		y -= v.y;
+		z -= v.z;
+		
+		return 0;
+	}
+	
+	int opAddAssign( Normal n )
+	{
+		x += n.x;
+		y += n.y;
+		z += n.z;
+		
+		return 0;
+	}
+	
+	int opDivAssign( int n )
+	{
+		x /= n;
+		y /= n;
+		z /= n;
+		
+		return 0;
+	}
+	
+	Normal cross( Normal on )
+	{
+		Normal n;
+		
+		n.x = y*on.z - z*on.y;				// Cross Product For Y - Z
+		n.y = z*on.x - x*on.z;				// Cross Product For X - Z
+		n.z = x*on.y - y*on.x;				// Cross Product For X - Y
+		
+		return n;
+	}
+	
+	void setToVertex( Vertex v )
+	{
+		x = v.x;
+		y = v.y;
+		z = v.z;
 	}
 }
 
@@ -260,6 +337,17 @@ class SubTri
 		verts[1] = b;
 		verts[2] = c;
 	}
+	
+	Normal calculateNormal( )
+	{
+	 	Normal v1, v2;
+		v1.setToVertex( verts[1] );
+		v1 -= verts[0];
+		v2.setToVertex( verts[2] );
+		v2 -= verts[0];
+		
+		return v1.cross( v2 );
+	}
 }
 
 class Face
@@ -275,6 +363,22 @@ class Face
 	
 	bool selected = false;
 	bool hot = false;
+	
+	Normal normal;
+	
+	Normal calculateNormal( )
+	{
+		normal.zero( );
+		
+		foreach ( t; tris )
+		{
+			normal += t.calculateNormal( );
+		}
+		
+		normal /= tris.length;
+		
+		return normal;
+	}
 	
 	void cleanReferences( )
 	{

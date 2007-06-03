@@ -928,6 +928,7 @@ class Body
 		// remove the face from the faces list
 		foreach ( a, sf; faces )
 		{
+			if ( sf is null ) throw new Exception( "While scanning faces, a face was null. Oops!" );
 			if ( sf == f )
 			{
 				auto n = faces[0..a];

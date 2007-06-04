@@ -2,6 +2,7 @@ module aura.model;
 
 import aura.selection;
 import aura.editing;
+import aura.list;
 
 private import opengl.gl;
 private import std.stdio;
@@ -18,22 +19,268 @@ struct Colour
 	}
 }
 
+//alias List!(Vertex) VertexList;
+class VertexList
+{
+	Vertex[] l;
+	
+	void append( Vertex i )
+	{
+		int n = l.length;
+		l.length = n+1;
+		l[n] = i;
+	}
+	
+	void appendUnique( Vertex i )
+	{
+		if ( find( i ) != -1 )
+			return;
+		
+		append( i );
+	}
+	
+	int find( Vertex i )
+	{
+		foreach ( a, ti; l )
+		{
+			if ( ti == i )
+				return a;
+		}
+		
+		return -1;
+	}
+	
+	void remove( Vertex i )
+	{
+		foreach ( a, ti; l )
+		{
+			if ( ti == i )
+			{
+				auto n = l[0..a];
+				auto m = l[a+1..l.length];
+				l = n ~ m;
+				return;
+			}
+		}
+	}
+	
+	Vertex opIndex( int a )
+	{
+		return l[a];
+	}
+	
+	Vertex[] opAssign( Vertex[] il )
+	{
+		l = il;
+		
+		return l;
+	}
+	
+	Vertex opIndexAssign( Vertex v, int a )
+	{
+		l[a] = v;
+		
+		return l[a];
+	}
+	
+	int opApply( int delegate(inout Vertex) dg )
+	{
+		foreach ( i; l )
+			dg( i );
+		return 0;
+	}
+	
+	Vertex[] get( )
+	{
+		return l;
+	}
+	
+	int length( )
+	{
+		return l.length;
+	}
+}
+
+class FaceList
+{
+	Face[] l;
+	
+	void append( Face i )
+	{
+		int n = l.length;
+		l.length = n+1;
+		l[n] = i;
+	}
+	
+	void appendUnique( Face i )
+	{
+		if ( find( i ) != -1 )
+			return;
+		
+		append( i );
+	}
+	
+	int find( Face i )
+	{
+		foreach ( a, ti; l )
+		{
+			if ( ti == i )
+				return a;
+		}
+		
+		return -1;
+	}
+	
+	void remove( Face i )
+	{
+		foreach ( a, ti; l )
+		{
+			if ( ti == i )
+			{
+				auto n = l[0..a];
+				auto m = l[a+1..l.length];
+				l = n ~ m;
+				return;
+			}
+		}
+	}
+	
+	Face opIndex( int a )
+	{
+		return l[a];
+	}
+	
+	Face[] opAssign( Face[] il )
+	{
+		l = il;
+		
+		return l;
+	}
+	
+	Face opIndexAssign( Face v, int a )
+	{
+		l[a] = v;
+		
+		return l[a];
+	}
+	
+	int opApply( int delegate(inout Face) dg )
+	{
+		foreach ( i; l )
+			dg( i );
+		return 0;
+	}
+	
+	Face[] get( )
+	{
+		return l;
+	}
+	
+	int length( )
+	{
+		return l.length;
+	}
+}
+
+class EdgeList
+{
+	Edge[] l;
+	
+	void append( Edge i )
+	{
+		int n = l.length;
+		l.length = n+1;
+		l[n] = i;
+	}
+	
+	void appendUnique( Edge i )
+	{
+		if ( find( i ) != -1 )
+			return;
+		
+		append( i );
+	}
+	
+	int find( Edge i )
+	{
+		foreach ( a, ti; l )
+		{
+			if ( ti == i )
+				return a;
+		}
+		
+		return -1;
+	}
+	
+	void remove( Edge i )
+	{
+		foreach ( a, ti; l )
+		{
+			if ( ti == i )
+			{
+				auto n = l[0..a];
+				auto m = l[a+1..l.length];
+				l = n ~ m;
+				return;
+			}
+		}
+	}
+	
+	Edge opIndex( int a )
+	{
+		return l[a];
+	}
+	
+	Edge[] opAssign( Edge[] il )
+	{
+		l = il;
+		
+		return l;
+	}
+	
+	Edge opIndexAssign( Edge v, int a )
+	{
+		l[a] = v;
+		
+		return l[a];
+	}
+	
+	int opApply( int delegate(inout Edge) dg )
+	{
+		foreach ( i; l )
+			dg( i );
+		return 0;
+	}
+	
+	Edge[] get( )
+	{
+		return l;
+	}
+	
+	int length( )
+	{
+		return l.length;
+	}
+}
+//alias List!(Face) FaceList;
+//alias List!(Edge) EdgeList;
+
 struct Normal
 {
 	float x, y, z;
 	
 	void normalize( )
 	{
-		float length;
+		float len;
 		
-		length = cast(float)sqrt((x*x) + (y*y) + (z*z));
+		len = cast(float)sqrt((x*x) + (y*y) + (z*z));
 
-		if(length == 0.0f)						// Prevents Divide By 0 Error By Providing
-			length = 1.0f;						// An Acceptable Value For Vectors To Close To 0.
+		if(len == 0.0f)						// Prevents Divide By 0 Error By Providing
+			len = 1.0f;						// An Acceptable Value For Vectors To Close To 0.
 
-		x /= length;						// Dividing Each Element By
-		y /= length;						// The Length Results In A
-		z /= length;						// Unit Normal Vector.
+		x /= len;						// Dividing Each Element By
+		y /= len;						// The Length Results In A
+		z /= len;						// Unit Normal Vector.
 	}
 	
 	int opAssign( Vertex v )
@@ -103,11 +350,13 @@ class Vertex
 	bool hot = false;
 	
 	// a Vertex can have many Faces and Edges
-	Face faces[];
-	Edge edges[];
+	FaceList faces;
+	EdgeList edges;
 	
 	void cleanReferencesToFace( Face f )
 	{
+		faces.remove( f );
+		/*
 		foreach ( a, tf; faces )
 		{
 			if ( tf != f )
@@ -117,7 +366,7 @@ class Vertex
 			auto m = faces[a+1..length];
 			faces = n ~ m;
 			break;
-		}
+		}*/
 		
 		if ( faces.length == 0 )
 		{
@@ -125,10 +374,18 @@ class Vertex
 		}
 	}
 	
+	void prepare( )
+	{
+		faces = new FaceList;
+		edges = new EdgeList;
+	}
+	
 	this() { this(null,0,0,0); }
 	
 	this( Body _b, float _x=0, float _y=0, float _z=0 )
 	{
+		prepare( );
+		
 		p_body = _b;
 		x = _x;
 		y = _y;
@@ -235,23 +492,14 @@ class Edge
 	Vertex vb;
 	
 	// and can belong to more than 1 Face
-	Object faces[];
+	List!(Object) faces;
 	
 	bool selected = false;
 	bool hot = false;
 	
 	void cleanReferencesToFace( Face f )
 	{
-		foreach ( a, tf; faces )
-		{
-			if ( tf != f )
-				continue;
-			
-			auto n = faces[0..a];
-			auto m = faces[a+1..length];
-			faces = n ~ m;
-			break;
-		}
+		faces.remove( f );
 		
 		if ( faces.length == 0 )
 		{
@@ -261,16 +509,13 @@ class Edge
 	
 	this( Vertex a, Vertex b )
 	{
+		faces = new List!(Object);
+		
 		va = a;
 		vb = b;
 		
-		int en = va.edges.length;
-		va.edges.length = en+1;
-		va.edges[en] = this;
-		
-		en = vb.edges.length;
-		vb.edges.length = en+1;
-		vb.edges[en] = this;
+		va.edges.append( this );
+		vb.edges.append( this );
 	}
 	
 	Vertex getOther( Vertex v )
@@ -294,9 +539,7 @@ class Edge
 	{
 		if ( f is null ) return;
 		
-		int fn = faces.length;
-		faces.length = fn+1;
-		faces[fn] = f;
+		faces.append( f );
 	}
 	
 	bool hasVertex( Vertex v )
@@ -352,10 +595,10 @@ class SubTri
 
 class Face
 {
-	Vertex verts[];
-	Edge edges[];
+	VertexList verts;
+	EdgeList edges;
 	
-	SubTri tris[];
+	List!(SubTri) tris;
 	
 	Body f_body;
 	
@@ -365,6 +608,13 @@ class Face
 	bool hot = false;
 	
 	Normal normal;
+	
+	this( )
+	{
+		verts = new VertexList;
+		edges = new EdgeList;
+		tris = new List!(SubTri);
+	}
 	
 	Normal calculateNormal( )
 	{
@@ -393,16 +643,17 @@ class Face
 	
 	void rebuildTris( )
 	{
-		foreach ( t; tris )
+		/*foreach ( t; tris )
 		{
 			delete t;
 		}
 		
-		tris.length = 0;
+		tris.length = 0;*/
+		tris = [];
 		
 		// now let's make our subtris
 		
-		tris.length = verts.length - 2;
+		//tris.length = verts.length - 2;
 		
 		//writefln( "Tris calculated: %s", tris.length );
 		
@@ -412,13 +663,13 @@ class Face
 		} else if ( verts.length == 3 )
 		{
 			// tri already
-			tris[0] = new SubTri( verts[0], verts[1], verts[2] );
+			tris.append( new SubTri( verts[0], verts[1], verts[2] ) );
 		}
 		else if ( verts.length == 4 )
 		{
 			// quad
-			tris[0] = new SubTri( verts[0], verts[1], verts[2] );
-			tris[1] = new SubTri( verts[2], verts[3], verts[0] );
+			tris.append( new SubTri( verts[0], verts[1], verts[2] ) );
+			tris.append( new SubTri( verts[2], verts[3], verts[0] ) );
 		}
 		else
 		{
@@ -428,14 +679,11 @@ class Face
 	
 	void addVertex( Vertex v )
 	{
-		int vl = verts.length;
-		
-		verts.length = vl+1;
-		verts[vl] = v;
+		verts.append( v );
 		
 		if ( v == null )
 		{
-			throw new Exception( "Attempt to append a null vertex to face with length " ~ std.string.toString(vl) );
+			throw new Exception( "Attempt to append a null vertex to face with length " ~ std.string.toString(verts.length) );
 		}
 	}
 	
@@ -443,11 +691,11 @@ class Face
 	{
 		int a;
 		
-		edges.length = verts.length;
+		//edges.length = verts.length;
 		for ( a = 1; a < verts.length; a++ )
-			edges[a-1] = Edge.getEdge( this, verts[a-1], verts[a] );
+			edges.append( Edge.getEdge( this, verts[a-1], verts[a] ) );
 		
-		edges[verts.length-1] = Edge.getEdge( this, verts[verts.length-1], verts[0] );
+		edges.append( Edge.getEdge( this, verts[verts.length-1], verts[0] ) );
 		
 		rebuildTris( );
 	}
@@ -836,14 +1084,17 @@ glVertex3f(-1.0f,-1.0f, 1.0f);					// Right Of Triangle (Left)
 */
 class Body
 {
-	Vertex verts[];
-	Face faces[];
+	VertexList verts;
+	FaceList faces;
 	
 	bool selected = false;
 	bool hot = false;
 	
 	this()
 	{
+		verts = new VertexList;
+		faces = new FaceList;
+		
 		Vertex a, b, c, d, e, f, g, h, i;
 		
 		a = addVertex(-1.0f,  1.0f,  1.0f ); // front top left
@@ -892,20 +1143,37 @@ class Body
 	
 	Vertex addVertex( float x, float y, float z )
 	{
-		int v = verts.length;
+		Vertex v = new Vertex( this, x, y, z );
+		
+		verts.append( v );
+		
+		return v;
+		/*int v = verts.length;
 		
 		verts.length = v+1;
-		verts[v] = new Vertex( this, x, y, z );
+		verts[v] = new Vertex( this, x, y, z );*/
 		/*verts[v].x = x;
 		verts[v].y = y;
 		verts[v].z = z;*/
 		
-		return verts[v];
+		//return verts[v];
 	}
 	
 	Face addFace( int num_verts, Vertex[] fverts ... )
 	{
-		int f = faces.length;
+		Face f = new Face;
+		f.f_body = this;
+		
+		faces.append( f );
+		
+		foreach ( v; fverts )
+			f.addVertex( v );
+		
+		f.computeEdges( );
+		
+		return f;
+		
+		/*int f = faces.length;
 		
 		faces.length = f+1;
 		faces[f] = new Face;
@@ -914,18 +1182,21 @@ class Body
 		foreach ( v; fverts )
 			faces[f].addVertex( v );
 		
-		faces[f].computeEdges( );
+		faces[f].computeEdges( );*/
 		/*
 		faces[f].verts.length = fverts.length;
 		faces[f].verts[0..length] = fverts[0..length];
 		*/
 		
-		return faces[f];
+		//return faces[f];
 	}
 	
 	void removeFace( Face f )
 	{
 		// remove the face from the faces list
+		faces.remove( f );
+		
+		/*
 		foreach ( a, sf; faces )
 		{
 			if ( sf is null ) throw new Exception( "While scanning faces, a face was null. Oops!" );
@@ -936,7 +1207,7 @@ class Body
 				faces = n ~ m;
 				break;
 			}
-		}
+		}*/
 		
 		f.cleanReferences( );
 	}

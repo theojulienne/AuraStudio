@@ -4,13 +4,20 @@ import std.stdio;
 
 import aura.model;
 import aura.operation;
+import aura.list;
 
 class InsetFace
 {
 	Face face;
-	Face[] bridges;
-	Vertex orig_verts[];
+	FaceList bridges;
+	VertexList orig_verts;
 	Vertex center;
+	
+	this( )
+	{
+		orig_verts = new VertexList;
+		bridges = new FaceList;
+	}
 	
 	void calculateOriginalCenter( Face f )
 	{
@@ -24,11 +31,9 @@ class InsetFace
 	
 	void copyOriginalVerts( Face f )
 	{
-		orig_verts.length = f.verts.length;
-		
-		foreach ( a, v; f.verts )
+		foreach ( v; f.verts )
 		{
-			orig_verts[a] = new Vertex( v, false );
+			orig_verts.append( new Vertex( v, false ) );
 		}
 	}
 	
@@ -36,31 +41,29 @@ class InsetFace
 	{
 		copyOriginalVerts( f );
 		
-		Vertex nverts[];
+		VertexList nverts = new VertexList;
 		
-		nverts.length = orig_verts.length;
-		
-		foreach ( a, v; orig_verts )
+		foreach ( v; orig_verts )
 		{
 			// small + (big - small)
-			nverts[a] = new Vertex( f.f_body );
-			nverts[a].setTo( v );
+			Vertex vn = new Vertex( f.f_body );
+			vn.setTo( v );
+			
+			nverts.append( vn );
 		}
 		
-		face = f.f_body.addFace( orig_verts.length, nverts );
+		face = f.f_body.addFace( orig_verts.length, nverts.get );
 	}
 	
 	void createBridgesTo( Face f )
 	{
-		bridges.length = f.verts.length;
-		
 		for ( int a = 0; a < f.verts.length; a++ )
 		{
 			int b = a+1;
 			
 			if ( b == f.verts.length ) b = 0; // wrap to start
 			
-			bridges[a] = f.f_body.addFace( 4, f.verts[a], f.verts[b], face.verts[b], face.verts[a] );
+			bridges.append( f.f_body.addFace( 4, f.verts[a], f.verts[b], face.verts[b], face.verts[a] ) );
 		}
 	}
 	
@@ -68,7 +71,9 @@ class InsetFace
 	{
 		Vertex tmp = new Vertex( null, 0, 0, 0 );
 		
-		foreach ( a, v; face.verts )
+		int a = 0;
+		
+		foreach ( v; face.verts )
 		{
 			tmp.zero( );
 			v.setTo( center );
@@ -76,35 +81,40 @@ class InsetFace
 			tmp -= center;
 			tmp *= value;
 			v += tmp;
+			
+			a++;
 		}
 	}
 }
 
 class InsetOperation : Operation
 {
-	InsetFace[] ifaces;
+	List!(InsetFace) ifaces;
 	
 	bool prepare( Selection sel )
 	{
 		if ( !Operation.prepare( sel ) )
 			return false;
 		
+		ifaces = new List!(InsetFace);
+		
 		auto faces = sel.getFaces( );
 		sel.resetSelection( );
 		
-		ifaces.length = faces.length;
-		
 		foreach ( n, f; faces )
 		{
-			ifaces[n] = new InsetFace;
+			InsetFace i;
 			
-			ifaces[n].calculateOriginalCenter( f );
+			i = new InsetFace;
+			ifaces.append( i );
 			
-			ifaces[n].createNewFaceFor( f );
+			i.calculateOriginalCenter( f );
 			
-			ifaces[n].createBridgesTo( f );
+			i.createNewFaceFor( f );
 			
-			sel.select( ifaces[n].face );
+			i.createBridgesTo( f );
+			
+			sel.select( i.face );
 			
 			f.f_body.removeFace( f );
 		}

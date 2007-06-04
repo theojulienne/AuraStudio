@@ -37,7 +37,7 @@ class List(T)
 			if ( ti == i )
 			{
 				auto n = l[0..a];
-				auto m = l[a+1..length];
+				auto m = l[a+1..l.length];
 				l = n ~ m;
 				return;
 			}
@@ -73,5 +73,10 @@ class List(T)
 	T[] get( )
 	{
 		return l;
+	}
+	
+	int length( )
+	{
+		return l.length;
 	}
 }

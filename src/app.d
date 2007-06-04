@@ -408,7 +408,7 @@ class AuraWindow : WindowWidget {
 		return v;
 	}
 	
-	const int BUFSIZE = 512;
+	const int BUFSIZE = 8192;
 	GLuint selectBuf[BUFSIZE];
 	
 	void startPicking( int cursorX, int cursorY )
@@ -430,7 +430,7 @@ class AuraWindow : WindowWidget {
 		glGetIntegerv( GL_VIEWPORT, viewport.ptr );
 		gluPickMatrix( cursorX, viewport[3]-cursorY, 5, 5, viewport.ptr );
 		
-		gluPerspective(45,width/height,0.1,1000);
+		gluPerspective(45,width/height,0.1,15000);
 		glMatrixMode(GL_MODELVIEW);
 		glInitNames();
 	}
@@ -645,6 +645,8 @@ class AuraWindow : WindowWidget {
 		
 		rtri+=0.2f;											// Increase The Rotation Variable For The Triangle ( NEW )
 		rquad-=0.15f;										// Decrease The Rotation Variable For The Quad ( NEW )
+		
+		std.gc.fullCollect( );
 	}
 }
 

@@ -214,9 +214,11 @@ class AuraWindow : WindowWidget {
 	
 	void scrollwheel( CEvent evt, CObject obj )
 	{
-		double delta = evt.getArgumentAsDouble( "deltaY" );
+		double deltaY = evt.getArgumentAsDouble( "deltaY" );
+		double deltaX = evt.getArgumentAsDouble( "deltaX" );
 		
-		cam.dist -= delta;
+		cam.spin_horiz -= deltaX;
+		cam.dist -= deltaY * 0.25f;
 	}
 	
 	void mousemoved( CEvent evt, CObject obj )

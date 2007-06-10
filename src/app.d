@@ -128,12 +128,26 @@ class AuraWindow : WindowWidget {
 		}
 		
 		i = appendToP( face_menu, "Move" );
-			appendTo( face_menu, i, "Normal", new MoveOperation(MoveOperation.DirectionN) );
+			appendTo( face_menu, i, "*Normal", new MoveOperation(MoveOperation.DirectionN) );
 			appendTo( face_menu, i, "X", new MoveOperation(MoveOperation.DirectionX) );
 			appendTo( face_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
 			appendTo( face_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
+			
+		i = appendToP( face_menu, "*Rotate");
+			appendTo( face_menu, i, "*Normal");
+			appendTo( face_menu, i, "*Free");
+			appendTo( face_menu, i, "*X");
+			appendTo( face_menu, i, "*Y");
+			appendTo( face_menu, i, "*Z");
 		
-		appendToP( face_menu, "Inset", new InsetOperation );
+		i = appendToP( face_menu, "*Scale" );
+			appendTo( face_menu, i, "*Uniform");
+			appendTo( face_menu, i, "*X");
+			appendTo( face_menu, i, "*Y");
+			appendTo( face_menu, i, "*Z");
+			appendTo( face_menu, i, "*Radial X");
+			appendTo( face_menu, i, "*Radial Y");
+			appendTo( face_menu, i, "*Radial Z");
 		
 		i = appendToP( face_menu, "Extrude" );
 			appendTo( face_menu, i, "Normal", new ExtrudeOperation(ExtrudeOperation.DirectionN) );
@@ -141,20 +155,22 @@ class AuraWindow : WindowWidget {
 			appendTo( face_menu, i, "Y", new ExtrudeOperation(ExtrudeOperation.DirectionY) );
 			appendTo( face_menu, i, "Z", new ExtrudeOperation(ExtrudeOperation.DirectionZ) );
 		
+		appendToP( face_menu, "Inset", new InsetOperation );
+		
 		i = appendToP( edge_menu, "Move" );
-			appendTo( edge_menu, i, "Normal", new MoveOperation(MoveOperation.DirectionN) );
+			appendTo( edge_menu, i, "*Normal", new MoveOperation(MoveOperation.DirectionN) );
 			appendTo( edge_menu, i, "X", new MoveOperation(MoveOperation.DirectionX) );
 			appendTo( edge_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
 			appendTo( edge_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
 		
 		i = appendToP( verts_menu, "Move" );
-			appendTo( verts_menu, i, "Normal", new MoveOperation(MoveOperation.DirectionN) );
+			appendTo( verts_menu, i, "*Normal", new MoveOperation(MoveOperation.DirectionN) );
 			appendTo( verts_menu, i, "X", new MoveOperation(MoveOperation.DirectionX) );
 			appendTo( verts_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
 			appendTo( verts_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
 		
 		i = appendToP( body_menu, "Move" );
-			appendTo( body_menu, i, "Normal", new MoveOperation(MoveOperation.DirectionN) );
+			appendTo( body_menu, i, "*Normal", new MoveOperation(MoveOperation.DirectionN) );
 			appendTo( body_menu, i, "X", new MoveOperation(MoveOperation.DirectionX) );
 			appendTo( body_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
 			appendTo( body_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );

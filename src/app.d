@@ -135,7 +135,11 @@ class AuraWindow : WindowWidget {
 		
 		appendToP( face_menu, "Inset", new InsetOperation );
 		
-		appendToP( face_menu, "Extrude", new ExtrudeOperation );
+		i = appendToP( face_menu, "Extrude" );
+			appendTo( face_menu, i, "Normal", new ExtrudeOperation(ExtrudeOperation.DirectionN) );
+			appendTo( face_menu, i, "X", new ExtrudeOperation(ExtrudeOperation.DirectionX) );
+			appendTo( face_menu, i, "Y", new ExtrudeOperation(ExtrudeOperation.DirectionY) );
+			appendTo( face_menu, i, "Z", new ExtrudeOperation(ExtrudeOperation.DirectionZ) );
 		
 		i = appendToP( edge_menu, "Move" );
 			appendTo( edge_menu, i, "Normal", new MoveOperation(MoveOperation.DirectionN) );

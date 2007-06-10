@@ -12,8 +12,11 @@ class ExtrudeFace
 	FaceList bridges;
 	VertexList orig_verts;
 	
-	this( )
+	int dir;
+	
+	this( int _dir )
 	{
+		dir = _dir;
 		orig_verts = new VertexList;
 		bridges = new FaceList;
 	}
@@ -68,9 +71,28 @@ class ExtrudeFace
 		foreach ( v; face.verts )
 		{
 			v.setTo( orig_verts[a] );
-			v.x += value * n.x;
-			v.y += value * n.y;
-			v.z += value * n.z;
+			
+			if ( dir == ExtrudeOperation.DirectionX )
+			{
+				v.x += value;
+			}
+			else
+			if ( dir == ExtrudeOperation.DirectionY )
+			{
+				v.y += value;
+			}
+			else
+			if ( dir == ExtrudeOperation.DirectionZ )
+			{
+				v.z += value;
+			}
+			else
+			if ( dir == ExtrudeOperation.DirectionN )
+			{
+				v.x += value * n.x;
+				v.y += value * n.y;
+				v.z += value * n.z;
+			}
 			
 			a++;
 		}
@@ -79,7 +101,19 @@ class ExtrudeFace
 
 class ExtrudeOperation : Operation
 {
+	static int DirectionX = 1;
+	static int DirectionY = 2;
+	static int DirectionZ = 3;
+	static int DirectionN = 4;
+	
+	int dir = 1;
+	
 	List!(ExtrudeFace) ifaces;
+	
+	this( int _dir )
+	{
+		dir = _dir;
+	}
 	
 	bool prepare( Selection sel )
 	{
@@ -95,7 +129,7 @@ class ExtrudeOperation : Operation
 		{
 			ExtrudeFace i;
 			
-			i = new ExtrudeFace;
+			i = new ExtrudeFace( dir );
 			ifaces.append( i );
 			
 			i.createNewFaceFor( f );

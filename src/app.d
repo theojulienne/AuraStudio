@@ -134,6 +134,7 @@ class AuraWindow : WindowWidget {
 			appendTo( face_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
 		
 		appendToP( face_menu, "Inset", new InsetOperation );
+		
 		appendToP( face_menu, "Extrude", new ExtrudeOperation );
 		
 		i = appendToP( edge_menu, "Move" );
@@ -217,7 +218,7 @@ class AuraWindow : WindowWidget {
 		double deltaY = evt.getArgumentAsDouble( "deltaY" );
 		double deltaX = evt.getArgumentAsDouble( "deltaX" );
 		
-		cam.spin_horiz -= deltaX;
+		cam.spin_horiz += deltaX;
 		cam.dist -= deltaY * 0.25f;
 	}
 	

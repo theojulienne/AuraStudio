@@ -6,6 +6,59 @@ import aura.model.all;
 import aura.operation;
 import aura.list;
 
+struct VEMap
+{
+	Edge e;
+	Vertex v;
+}
+
+struct VFMap
+{
+	Face f;
+	Vertex v;
+}
+
+class ABMap(A,B)
+{
+	A[] as;
+	B[] bs;
+	
+	void opIndexAssign( B b, A a )
+	{
+		int an, bn;
+		
+		an = as.length;
+		bn = bs.length;
+		
+		as.length = an+1;
+		bs.length = bn+1;
+		
+		as[an] = a;
+		bs[bn] = b;
+	}
+	
+	B opIndex( A a )
+	{
+		return opIn_r( a );
+	}
+	
+	B opIn_r( A a )
+	{
+		foreach ( n, ta; as )
+		{
+			if ( ta == a )
+				return bs[n];
+		}
+		
+		return null;
+	}
+	
+	int length( )
+	{
+		return as.length;
+	}
+}
+
 class SmoothOperation : Operation
 {
 	
@@ -14,8 +67,10 @@ class SmoothOperation : Operation
 	VertexList face_verts;
 	Body b;
 	
-	Vertex[Edge] vemap;
-	Vertex[Face] vfmap;
+	/*Vertex[Edge] vemap;
+	Vertex[Face] vfmap;*/
+	ABMap!(Edge,Vertex) vemap;
+	ABMap!(Face,Vertex) vfmap;
 	
 	this( )
 	{
@@ -65,6 +120,9 @@ class SmoothOperation : Operation
 		if ( !Operation.prepare( sel ) )
 			return false;
 		
+		vemap = new ABMap!( Edge, Vertex );
+		vfmap = new ABMap!( Face, Vertex );
+		
 		auto faces = sel.getFaces( );
 		sel.resetSelection( );
 		
@@ -96,8 +154,6 @@ class SmoothOperation : Operation
 				
 				ops.appendUnique( vo );
 			}
-			
-			f.f_body.removeFace( f );
 		}
 		
 		foreach ( P; ops )
@@ -107,9 +163,10 @@ class SmoothOperation : Operation
 			int a = 0;
 			
 			writefln( "P.faces.length: %d", P.faces.length);
-			writefln( "vfmap.length: %d", vfmap.length);
+			writefln( "vfmap.length: %d %s", vfmap.length, vfmap);
 			foreach ( vf; P.faces )
 			{	
+				writefln( "%s", (vf in vfmap) );
 				if ( !( vf in vfmap ) )
 					continue;
 				
@@ -124,7 +181,7 @@ class SmoothOperation : Operation
 			}
 			
 			F /= a;
-
+			
 
 			Vertex R = new Vertex( null, 0, 0, 0 );
 			a = 0;
@@ -146,9 +203,7 @@ class SmoothOperation : Operation
 			
 			R /= a;
 			
-			
-			Vertex PC = new Vertex( P );
-			PC = (F + (R*2) + ((a-3) * P)) / a;
+			Vertex PC = (F + (R*2) + ((a-3) * P)) / a;
 			
 			writefln( "XYZ: %f %f %f", PC.x, PC.y, PC.z );
 			P.zero;
@@ -156,7 +211,12 @@ class SmoothOperation : Operation
 			
 		}
 		
-		return true;
+		foreach ( n, f; faces )
+		{
+			f.f_body.removeFace( f );
+		}
+		
+		return false;
 	}
 	
 	void update( )

@@ -212,6 +212,18 @@ class AuraWindow : WindowWidget {
 				s.cleanup( );
 			}
 		}
+		
+		if ( key == '+' ) {
+			// grow selection
+		}
+		
+		if ( key == '-' ) {
+			// shrink selection
+		}
+		
+		if ( key == 'i' ) {
+			// select similar
+		}
 	}
 	
 	void runOperation( CEvent evt, CObject obj )

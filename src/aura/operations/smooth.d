@@ -62,9 +62,6 @@ class ABMap(A,B)
 class SmoothOperation : Operation
 {
 	
-	VertexList orig_verts;
-	VertexList edge_verts;
-	VertexList face_verts;
 	Body b;
 	
 	/*Vertex[Edge] vemap;
@@ -74,9 +71,6 @@ class SmoothOperation : Operation
 	
 	this( )
 	{
-		orig_verts = new VertexList;
-		edge_verts = new VertexList;
-		face_verts = new VertexList;
 	}
 	
 	Vertex add_face_vert( Face f )
@@ -89,8 +83,6 @@ class SmoothOperation : Operation
 		}
 		
 		v /= f.verts.length;
-		
-		face_verts.append( v );
 		
 		return v;
 	}
@@ -118,7 +110,6 @@ class SmoothOperation : Operation
 		
 		vb /= n;
 		
-		edge_verts.append( vb );
 		vemap[e] = vb;
 		
 		return vb;
@@ -147,12 +138,26 @@ class SmoothOperation : Operation
 		
 		b = faces[0].f_body;
 		
+		ABMap!( Edge, Vertex ) midpoints = new ABMap!( Edge, Vertex );
+		
+		// The face points are positioned as the average of the positions of the face's original vertices;
 		foreach ( n, f; faces )
 		{
 			Vertex vc = add_face_vert( f );
 			vfmap[f] = vc;
+			
+			foreach ( e; f.edges )
+			{
+				Vertex vt = new Vertex( null, 0, 0, 0 );
+				vt += e.va;
+				vt += e.vb;
+				vt /= 2;
+				midpoints[e] = vt;
+			}
 		}
 		
+		// The edge point locations are calculated as the average of the center point of the original edge 
+		// and the average of the locations of the two new adjacent face points;
 		foreach ( n, f; faces )
 		{
 			Vertex vc = vfmap[f];
@@ -210,7 +215,7 @@ class SmoothOperation : Operation
 				if ( !( ve in vemap ) )
 					continue;
 				
-				R += vemap[ve];
+				R += midpoints[ve];
 
 				
 				writefln( "R-XYZ: %f %f %f", R.x, R.y, R.z );
@@ -221,7 +226,9 @@ class SmoothOperation : Operation
 			
 			R /= b;
 			
-			Vertex PC = (F + (R*2) + ((a-3) * P)) / a;
+			float n = b;
+			
+			Vertex PC = (F + (R*2) + ((n-3) * P)) / n;
 			
 			writefln( "XYZ: %f %f %f", PC.x, PC.y, PC.z );
 			P.zero;

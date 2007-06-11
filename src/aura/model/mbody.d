@@ -46,14 +46,14 @@ class Body
 		fa = addFace( 4, f, b, a, e );
 		fa = addFace( 4, c, d, h, g );
 		fa = addFace( 4, e, g, h, f );
-		//fa = addFace( 4, a, e, g, c );
+		/**/fa = addFace( 4, a, c, g, e );
 		fa = addFace( 4, b, f, h, d );
-		
+		/*
 		fa = addFace( 3, c, i, a );
 		fa = addFace( 3, e, i, g );
 		fa = addFace( 3, a, i, e );
 		fa = addFace( 3, g, i, c );
-		
+		*/
 		/*
 		foreach ( f; faces )
 		{

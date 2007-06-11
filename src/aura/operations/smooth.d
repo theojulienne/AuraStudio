@@ -61,7 +61,6 @@ class ABMap(A,B)
 
 class SmoothOperation : Operation
 {
-	
 	Body b;
 	
 	/*Vertex[Edge] vemap;
@@ -134,6 +133,9 @@ class SmoothOperation : Operation
 		auto faces = sel.getFaces( );
 		sel.resetSelection( );
 		
+		if ( faces.length == 0 )
+			return false;
+		
 		VertexList ops = new VertexList;
 		
 		b = faces[0].f_body;
@@ -175,7 +177,8 @@ class SmoothOperation : Operation
 				
 				Vertex vo = f.edges[en].getCommonVertex( f.edges[et] );
 				
-				b.addFace( 4, vc, vp, vo, vt );
+				Face nf = b.addFace( 4, vc, vp, vo, vt );
+				sel.select( nf );
 				
 				ops.appendUnique( vo );
 			}

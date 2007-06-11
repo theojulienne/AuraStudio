@@ -135,6 +135,41 @@ class Vertex
 		return 0;
 	}
 	
+	Vertex opMul( float a )
+	{
+		Vertex v = new Vertex( null, 0, 0, 0 );
+		
+		v += this;
+		
+		v.x *= a;
+		v.y *= a;
+		v.z *= a;
+		
+		return v;
+	}
+	
+	Vertex opAdd( Vertex vt )
+	{
+		Vertex v = new Vertex( null, 0, 0, 0 );
+		
+		v += this;
+		
+		v += vt;
+		
+		return v;
+	}
+	
+	Vertex opDiv( float a )
+	{
+		Vertex v = new Vertex( null, 0, 0, 0 );
+		
+		v += this;
+		
+		v /= a;
+		
+		return v;
+	}
+	
 	void setTo( Vertex v )
 	{
 		x = v.x;

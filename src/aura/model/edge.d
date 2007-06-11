@@ -72,6 +72,14 @@ class Edge
 		return Vertex.makeCenterOf( va, vb );
 	}
 	
+	Vertex getCommonVertex( Edge b )
+	{
+		if ( b.hasVertex( va ) )
+			return va;
+		
+		return vb;
+	}
+	
 	static Edge getEdge( Face f, Vertex a, Vertex b )
 	{
 		foreach ( e; a.edges )

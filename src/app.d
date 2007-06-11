@@ -24,6 +24,7 @@ import aura.operation;
 import aura.operations.inset;
 import aura.operations.extrude;
 import aura.operations.move;
+import aura.operations.smooth;
 
 class AuraWindow : WindowWidget {
 	Body model;
@@ -160,6 +161,7 @@ class AuraWindow : WindowWidget {
 			appendTo( face_menu, i, "Z", new ExtrudeOperation(ExtrudeOperation.DirectionZ) );
 		
 		appendToP( face_menu, "Inset", new InsetOperation );
+		appendToP( face_menu, "Smooth", new SmoothOperation);
 		
 		i = appendToP( edge_menu, "Move" );
 			appendTo( edge_menu, i, "*Normal", new MoveOperation(MoveOperation.DirectionN) );
@@ -178,6 +180,8 @@ class AuraWindow : WindowWidget {
 			appendTo( body_menu, i, "X", new MoveOperation(MoveOperation.DirectionX) );
 			appendTo( body_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
 			appendTo( body_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
+			
+		appendToP( body_menu, "*Smooth" );
 	}
 	
 	Operation curr_op;

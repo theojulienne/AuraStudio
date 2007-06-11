@@ -193,7 +193,12 @@ class AuraWindow : WindowWidget {
 	{
 		int key = evt.getArgumentAsInt("key");
 		int modifiers = evt.getArgumentAsInt("modifiers");
-		writefln( "DN: %s (%s)", key, modifiers );
+		writefln( "UP: %s (%s)", key, modifiers );
+		
+		if ( key == ' ' )
+		{
+			sel.resetSelection( );
+		}
 	}
 	
 	void runOperation( CEvent evt, CObject obj )

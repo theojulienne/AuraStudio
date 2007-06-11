@@ -99,6 +99,12 @@ class ExtrudeFace
 	}
 }
 
+class ExtrudeFaceList
+{
+	mixin MixList!(ExtrudeFace);
+}
+
+
 class ExtrudeOperation : Operation
 {
 	static int DirectionX = 1;
@@ -108,7 +114,7 @@ class ExtrudeOperation : Operation
 	
 	int dir = 1;
 	
-	List!(ExtrudeFace) ifaces;
+	ExtrudeFaceList ifaces;
 	
 	this( int _dir )
 	{
@@ -120,7 +126,7 @@ class ExtrudeOperation : Operation
 		if ( !Operation.prepare( sel ) )
 			return false;
 		
-		ifaces = new List!(ExtrudeFace);
+		ifaces = new ExtrudeFaceList;
 		
 		auto faces = sel.getFaces( );
 		sel.resetSelection( );

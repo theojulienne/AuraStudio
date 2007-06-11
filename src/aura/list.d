@@ -1,6 +1,6 @@
 module aura.list;
 
-class List(T)
+/*class List(T)
 {
 	T[] l;
 	
@@ -81,7 +81,7 @@ class List(T)
 	{
 		return l.length;
 	}
-}
+}*/
 
 template MixList(T)
 {
@@ -115,16 +115,24 @@ template MixList(T)
 	
 	void remove( T i )
 	{
+		T[] n;
+		int el = 0;
+		
+		n.length = l.length;
+		
 		foreach ( a, ti; l )
 		{
-			if ( ti == i )
+			if ( ti != i )
 			{
-				auto n = l[0..a];
-				auto m = l[a+1..l.length];
-				l = n ~ m;
-				return;
+				n[el] = ti;
+				el++;
 			}
 		}
+		
+		n.length = el;
+		
+		delete l;
+		l = n;
 	}
 	
 	T opIndex( int a )

@@ -18,7 +18,7 @@ class Edge
 	Vertex vb;
 	
 	// and can belong to more than 1 Face
-	List!(Object) faces;
+	FaceList faces;
 	
 	bool selected = false;
 	bool hot = false;
@@ -35,7 +35,7 @@ class Edge
 	
 	this( Vertex a, Vertex b )
 	{
-		faces = new List!(Object);
+		faces = new FaceList;
 		
 		va = a;
 		vb = b;

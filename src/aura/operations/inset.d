@@ -87,16 +87,21 @@ class InsetFace
 	}
 }
 
+class InsetFaceList
+{
+	mixin MixList!(InsetFace);
+}
+
 class InsetOperation : Operation
 {
-	List!(InsetFace) ifaces;
+	InsetFaceList ifaces;
 	
 	bool prepare( Selection sel )
 	{
 		if ( !Operation.prepare( sel ) )
 			return false;
 		
-		ifaces = new List!(InsetFace);
+		ifaces = new InsetFaceList;
 		
 		auto faces = sel.getFaces( );
 		sel.resetSelection( );

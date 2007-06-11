@@ -50,6 +50,8 @@ class AuraWindow : WindowWidget {
 		this.ogl = new OpenGLWidget( this, lt.bounds("clock") );
 		this.ogl.redrawDelegate = &this.gl_redraw;
 		
+		this.ogl.notify = Widget.NotifyKey;
+		
 		this.make_menu( );
 		
 		sel = new Selection;
@@ -85,6 +87,8 @@ class AuraWindow : WindowWidget {
 		this.ogl.add_handler( "middle_released", &this.middlereleased );
 		this.ogl.add_handler( "scroll_wheel", &this.scrollwheel );
 		this.ogl.add_handler( "right_clicked", &this.context );
+		this.ogl.add_handler( "key_down", &this.key_down );
+		this.ogl.add_handler( "key_up", &this.key_up );
 		this.gl_resized( null, this.ogl );
 	}
 	
@@ -178,6 +182,20 @@ class AuraWindow : WindowWidget {
 	
 	Operation curr_op;
 	
+	void key_down( CEvent evt, CObject obj )
+	{
+		int key = evt.getArgumentAsInt("key");
+		int modifiers = evt.getArgumentAsInt("modifiers");
+		writefln( "DN: %s (%s)", key, modifiers );
+	}
+	
+	void key_up( CEvent evt, CObject obj )
+	{
+		int key = evt.getArgumentAsInt("key");
+		int modifiers = evt.getArgumentAsInt("modifiers");
+		writefln( "DN: %s (%s)", key, modifiers );
+	}
+	
 	void runOperation( CEvent evt, CObject obj )
 	{
 		Operation c = unbox!(Operation)(obj.appdata);
@@ -238,8 +256,14 @@ class AuraWindow : WindowWidget {
 		double deltaY = evt.getArgumentAsDouble( "deltaY" );
 		double deltaX = evt.getArgumentAsDouble( "deltaX" );
 		
+		int modifiers = evt.getArgumentAsInt("modifiers");
+		
 		cam.spin_horiz += deltaX;
-		cam.dist -= deltaY * 0.25f;
+		
+		if ( modifiers & Widget.ModifierKeyAlternate )
+			cam.spin_vert += deltaY;
+		else
+			cam.dist -= deltaY * 0.25f;
 	}
 	
 	void mousemoved( CEvent evt, CObject obj )

@@ -190,10 +190,10 @@ class SmoothOperation : Operation
 			
 			int a = 0;
 			
-			writefln( "P.faces.length: %d", P.faces.length);
-			writefln( "P.edges.length: %d", P.edges.length);
-			writefln( "vfmap.length: %d", vfmap.length);
-			writefln( "vemap.length: %d", vemap.length);
+			//writefln( "P.faces.length: %d", P.faces.length);
+			//writefln( "P.edges.length: %d", P.edges.length);
+			//writefln( "vfmap.length: %d", vfmap.length);
+			//writefln( "vemap.length: %d", vemap.length);
 			foreach ( vf; P.faces )
 			{
 	
@@ -202,7 +202,7 @@ class SmoothOperation : Operation
 				
 				F += vfmap[vf];
 
-				writefln( "F-XYZ: %f %f %f", F.x, F.y, F.z );
+				//writefln( "F-XYZ: %f %f %f", F.x, F.y, F.z );
 				
 				
 				a++;
@@ -222,7 +222,7 @@ class SmoothOperation : Operation
 				R += midpoints[ve];
 
 				
-				writefln( "R-XYZ: %f %f %f", R.x, R.y, R.z );
+				//writefln( "R-XYZ: %f %f %f", R.x, R.y, R.z );
 				
 				
 				b++;
@@ -234,7 +234,7 @@ class SmoothOperation : Operation
 			
 			Vertex PC = (F + (R*2) + ((n-3) * P)) / n;
 			
-			writefln( "XYZ: %f %f %f", PC.x, PC.y, PC.z );
+			//writefln( "XYZ: %f %f %f", PC.x, PC.y, PC.z );
 			P.zero;
 			P += PC;
 			

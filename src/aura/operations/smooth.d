@@ -95,11 +95,28 @@ class SmoothOperation : Operation
 		return v;
 	}
 	
+	// Set each edge point to be the average of all neighbouring face points and original points.
 	Vertex add_edge_vert( Edge e )
 	{
-		Vertex v = Vertex.makeCenterOf( e.va, e.vb );
+		int n = 2;
+		
 		Vertex vb = new Vertex( b, 0, 0, 0 );
-		vb += v;
+		
+		//  and original points
+		vb += e.va;
+		vb += e.vb;
+		
+		//  of all neighbouring face points
+		foreach ( f; e.faces )
+		{
+			if ( !( f in vfmap ) )
+				continue;
+			
+			vb += vfmap[f];
+			n++;
+		}
+		
+		vb /= n;
 		
 		edge_verts.append( vb );
 		vemap[e] = vb;
@@ -133,9 +150,12 @@ class SmoothOperation : Operation
 		foreach ( n, f; faces )
 		{
 			Vertex vc = add_face_vert( f );
-			
 			vfmap[f] = vc;
-			
+		}
+		
+		foreach ( n, f; faces )
+		{
+			Vertex vc = vfmap[f];
 			VertexList vl = new VertexList;
 			
 			for ( int en = 0; en < f.edges.length; en++ )
@@ -163,14 +183,13 @@ class SmoothOperation : Operation
 			int a = 0;
 			
 			writefln( "P.faces.length: %d", P.faces.length);
-			writefln( "vfmap.length: %d %s", vfmap.length, vfmap);
+			writefln( "P.edges.length: %d", P.edges.length);
+			writefln( "vfmap.length: %d", vfmap.length);
+			writefln( "vemap.length: %d", vemap.length);
 			foreach ( vf; P.faces )
 			{	
-				writefln( "%s", (vf in vfmap) );
 				if ( !( vf in vfmap ) )
 					continue;
-				
-				// never gets here
 				
 				F += vfmap[vf];
 
@@ -184,7 +203,7 @@ class SmoothOperation : Operation
 			
 
 			Vertex R = new Vertex( null, 0, 0, 0 );
-			a = 0;
+			int b = 0;
 			
 			foreach ( ve; P.edges )
 			{
@@ -197,11 +216,10 @@ class SmoothOperation : Operation
 				writefln( "R-XYZ: %f %f %f", R.x, R.y, R.z );
 				
 				
-				a++;
+				b++;
 			}
 			
-			
-			R /= a;
+			R /= b;
 			
 			Vertex PC = (F + (R*2) + ((a-3) * P)) / a;
 			

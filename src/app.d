@@ -203,6 +203,15 @@ class AuraWindow : WindowWidget {
 		{
 			sel.resetSelection( );
 		}
+		
+		if ( key == 's' ) {
+			if ( edmode == EditMode.Body || edmode == EditMode.Face )
+			{
+				SmoothOperation s = new SmoothOperation;
+				s.prepare( sel );
+				s.cleanup( );
+			}
+		}
 	}
 	
 	void runOperation( CEvent evt, CObject obj )

@@ -192,7 +192,8 @@ class SmoothOperation : Operation
 			writefln( "vfmap.length: %d", vfmap.length);
 			writefln( "vemap.length: %d", vemap.length);
 			foreach ( vf; P.faces )
-			{	
+			{
+	
 				if ( !( vf in vfmap ) )
 					continue;
 				

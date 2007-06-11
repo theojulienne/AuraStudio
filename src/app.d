@@ -18,7 +18,7 @@ import std.random;
 import std.boxer;
 import std.gc;
 
-import aura.model;
+import aura.model.all;
 
 import aura.operation;
 import aura.operations.inset;
@@ -453,7 +453,7 @@ class AuraWindow : WindowWidget {
 		glGetIntegerv( GL_VIEWPORT, viewport.ptr );
 		gluPickMatrix( cursorX, viewport[3]-cursorY, 5, 5, viewport.ptr );
 		
-		gluPerspective(45,width/height,0.1,15000);
+		gluPerspective(45,width/height,0.1,10000);
 		glMatrixMode(GL_MODELVIEW);
 		glInitNames();
 	}
@@ -649,7 +649,7 @@ class AuraWindow : WindowWidget {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		
-		gluPerspective(45.0f,cast(float)width/cast(float)height,0.1f,100.0f);
+		gluPerspective(45.0f,cast(float)width/cast(float)height,0.1f,10000);
 
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();

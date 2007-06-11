@@ -2,7 +2,7 @@ module aura.operations.move;
 
 import std.stdio;
 
-import aura.model;
+import aura.model.all;
 import aura.operation;
 import aura.editing;
 
@@ -17,8 +17,8 @@ class MoveOperation : Operation
 	
 	int dir = 1;
 	
-	List!(Vertex) verts;
-	List!(Vertex) orig_verts;
+	VertexList verts;
+	VertexList orig_verts;
 	
 	EditMode emode;
 	
@@ -32,7 +32,7 @@ class MoveOperation : Operation
 		if ( !Operation.prepare( sel ) )
 			return false;
 		
-		verts = new List!(Vertex);
+		verts = new VertexList;
 		
 		emode = sel.mode;
 		
@@ -74,7 +74,7 @@ class MoveOperation : Operation
 			}
 		}
 		
-		orig_verts = new List!(Vertex);
+		orig_verts = new VertexList;
 		foreach ( v; verts )
 		{
 			orig_verts.append( new Vertex( v ) );

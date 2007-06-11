@@ -2,7 +2,7 @@ module aura.operations.extrude;
 
 import std.stdio;
 
-import aura.model;
+import aura.model.all;
 import aura.operation;
 import aura.list;
 

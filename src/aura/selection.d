@@ -2,7 +2,13 @@ module aura.selection;
 
 import std.stdio;
 
-import aura.model;
+import aura.model.edge;
+import aura.model.face;
+import aura.model.mbody;
+import aura.model.normal;
+import aura.model.subtri;
+import aura.model.vertex;
+
 import aura.editing;
 import aura.list;
 
@@ -24,17 +30,17 @@ class Selection
 	
 	EditMode mode;
 	
-	List!(Face) sel_faces;
-	List!(Edge) sel_edges;
-	List!(Vertex) sel_verts;
-	List!(Body) sel_bodies;
+	FaceList sel_faces;
+	EdgeList sel_edges;
+	VertexList sel_verts;
+	BodyList sel_bodies;
 	
 	this( )
 	{
-		sel_faces = new List!(Face);
-		sel_edges = new List!(Edge);
-		sel_verts = new List!(Vertex);
-		sel_bodies = new List!(Body);
+		sel_faces = new FaceList;
+		sel_edges = new EdgeList;
+		sel_verts = new VertexList;
+		sel_bodies = new BodyList;
 	}
 	
 	void resetSelection( )
@@ -51,10 +57,10 @@ class Selection
 		foreach ( b; sel_bodies )
 			b.selected = false;
 		
-		sel_faces = new List!(Face);
-		sel_edges = new List!(Edge);
-		sel_verts = new List!(Vertex);
-		sel_bodies = new List!(Body);
+			sel_faces = new FaceList;
+			sel_edges = new EdgeList;
+			sel_verts = new VertexList;
+			sel_bodies = new BodyList;
 	}
 	
 	Face[] getFaces( )

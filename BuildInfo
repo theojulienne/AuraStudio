@@ -8,7 +8,6 @@ targets
 		sources
 			src/app.d
 			src/aura/list.d
-			src/aura/model.d
 			src/aura/selection.d
 			src/aura/editing.d
 			src/aura/camera.d
@@ -16,6 +15,13 @@ targets
 			src/aura/operations/inset.d
 			src/aura/operations/extrude.d
 			src/aura/operations/move.d
+			src/aura/model/all.d
+			src/aura/model/mbody.d
+			src/aura/model/edge.d
+			src/aura/model/face.d
+			src/aura/model/normal.d
+			src/aura/model/subtri.d
+			src/aura/model/vertex.d
 			src/opengl/gl.d
 			src/claro/core.d
 			src/claro/base/all.d

@@ -63,6 +63,21 @@ class Selection
 			sel_bodies = new BodyList;
 	}
 	
+	void grow( )
+	{
+
+	}
+	
+	void shrink( )
+	{
+
+	}
+	
+	void selectSimilar( )
+	{
+		
+	}
+	
 	Face[] getFaces( )
 	{
 		return sel_faces.get;
@@ -82,6 +97,7 @@ class Selection
 	{
 		return sel_bodies.get;
 	}
+	
 	
 	void clearHot( )
 	{

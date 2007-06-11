@@ -214,15 +214,15 @@ class AuraWindow : WindowWidget {
 		}
 		
 		if ( key == '+' ) {
-			// grow selection
+			sel.grow( );
 		}
 		
 		if ( key == '-' ) {
-			// shrink selection
+			sel.shrink( );
 		}
 		
 		if ( key == 'i' ) {
-			// select similar
+			sel.selectSimilar( );
 		}
 	}
 	

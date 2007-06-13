@@ -28,12 +28,160 @@ class Selection
 	Face f_hot = null;
 	Body b_hot = null;
 	
-	EditMode mode;
+	EditMode _mode;
 	
 	FaceList sel_faces;
 	EdgeList sel_edges;
 	VertexList sel_verts;
 	BodyList sel_bodies;
+	
+	EditMode mode( )
+	{
+		return _mode;
+	}
+	
+	void mode( EditMode _m )
+	{
+		changeModes( _mode, _m );
+		_mode = _m;
+	}
+	
+	void changeModes( EditMode from, EditMode to )
+	{
+		if ( from == to )
+			return;
+		
+		if ( to == EditMode.Body )
+		{
+			// Body
+			resetBodySelection( );
+			
+			if ( from == EditMode.Face )
+			{
+				foreach ( f; sel_faces )
+					select( f.f_body, false, true );
+			}
+			else if ( from == EditMode.Edge )
+			{
+				foreach ( e; sel_edges )
+					select( e.va.p_body, false, true );
+			}
+			else if ( from == EditMode.Vertex )
+			{
+				foreach( v; sel_verts )
+					select( v.p_body, false, true );
+			}
+			
+			resetFaceSelection( );
+			resetEdgeSelection( );
+			resetVertSelection( );
+		}
+		else if ( to == EditMode.Face )
+		{
+			// Face
+			resetFaceSelection( );
+			
+			if ( from == EditMode.Body )
+			{
+				foreach ( b; sel_bodies )
+				{
+					foreach ( f; b.faces )
+						select( f, false, true );
+				}
+			}
+			else if ( from == EditMode.Edge )
+			{
+				foreach ( e; sel_edges )
+				{
+					foreach ( f; e.faces )
+						select( f, false, true );
+				}
+			}
+			else if ( from == EditMode.Vertex )
+			{
+				foreach( v; sel_verts )
+				{
+					foreach ( f; v.faces )
+						select( f, false, true );
+				}
+			}
+			
+			resetBodySelection( );
+			resetEdgeSelection( );
+			resetVertSelection( );
+		}
+		else if ( to == EditMode.Edge )
+		{
+			// Edge
+			resetEdgeSelection( );
+			
+			if ( from == EditMode.Body )
+			{
+				foreach ( b; sel_bodies )
+				{
+					foreach ( f; b.faces )
+					{
+						foreach ( e; f.edges )
+							select( e, false, true );
+					}
+				}
+			}
+			else if ( from == EditMode.Face )
+			{
+				foreach ( f; sel_faces )
+				{
+					foreach ( e; f.edges )
+						select( e, false, true );
+				}
+			}
+			else if ( from == EditMode.Vertex )
+			{
+				foreach( v; sel_verts )
+				{
+					foreach ( e; v.edges )
+						select( e, false, true );
+				}
+			}
+			
+			resetBodySelection( );
+			resetFaceSelection( );
+			resetVertSelection( );
+		}
+		else if ( to == EditMode.Vertex )
+		{
+			// Vertex
+			resetVertSelection( );
+			
+			if ( from == EditMode.Body )
+			{
+				foreach ( b; sel_bodies )
+				{
+					foreach ( v; b.verts )
+						select( v, false, true );
+				}
+			}
+			else if ( from == EditMode.Face )
+			{
+				foreach ( f; sel_faces )
+				{
+					foreach ( v; f.verts )
+						select( v, false, true );
+				}
+			}
+			else if ( from == EditMode.Edge )
+			{
+				foreach( e; sel_edges )
+				{
+					select( e.va, false, true );
+					select( e.vb, false, true );
+				}
+			}
+			
+			resetBodySelection( );
+			resetFaceSelection( );
+			resetEdgeSelection( );
+		}
+	}
 	
 	this( )
 	{
@@ -43,24 +191,44 @@ class Selection
 		sel_bodies = new BodyList;
 	}
 	
-	void resetSelection( )
+	void resetFaceSelection( )
 	{
 		foreach ( f; sel_faces )
 			f.selected = false;
 		
+		sel_faces = new FaceList;
+	}
+	
+	void resetEdgeSelection( )
+	{
 		foreach ( e; sel_edges )
 			e.selected = false;
-				
+		
+		sel_edges = new EdgeList;
+	}
+	
+	void resetVertSelection( )
+	{
 		foreach ( v; sel_verts )
 			v.selected = false;
-			
+		
+		sel_verts = new VertexList;
+	}
+	
+	void resetBodySelection( )
+	{
 		foreach ( b; sel_bodies )
 			b.selected = false;
 		
-			sel_faces = new FaceList;
-			sel_edges = new EdgeList;
-			sel_verts = new VertexList;
-			sel_bodies = new BodyList;
+		sel_bodies = new BodyList;
+	}
+	
+	void resetSelection( )
+	{
+		resetBodySelection( );
+		resetFaceSelection( );
+		resetEdgeSelection( );
+		resetVertSelection( );
 	}
 	
 	void grow( )

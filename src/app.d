@@ -257,7 +257,7 @@ class AuraWindow : WindowWidget {
 		if ( i is null ) return;
 		
 		edmode = unbox!(EditMode)( i.appdata );
-		sel.resetSelection( );
+		//sel.resetSelection( );
 		sel.mode = edmode;
 	}
 	

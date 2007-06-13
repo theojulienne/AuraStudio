@@ -63,10 +63,10 @@ class SmoothOperation : Operation
 {
 	Body b;
 	
-	/*Vertex[Edge] vemap;
-	Vertex[Face] vfmap;*/
-	ABMap!(Edge,Vertex) vemap;
-	ABMap!(Face,Vertex) vfmap;
+	Vertex[Edge] vemap;
+	Vertex[Face] vfmap;
+	/*ABMap!(Edge,Vertex) vemap;
+	ABMap!(Face,Vertex) vfmap;*/
 	
 	this( )
 	{
@@ -127,8 +127,8 @@ class SmoothOperation : Operation
 		if ( !Operation.prepare( sel ) )
 			return false;
 		
-		vemap = new ABMap!( Edge, Vertex );
-		vfmap = new ABMap!( Face, Vertex );
+		//vemap = new ABMap!( Edge, Vertex );
+		//vfmap = new ABMap!( Face, Vertex );
 		
 		auto faces = sel.getFaces( );
 		sel.resetSelection( );
@@ -140,7 +140,8 @@ class SmoothOperation : Operation
 		
 		b = faces[0].f_body;
 		
-		ABMap!( Edge, Vertex ) midpoints = new ABMap!( Edge, Vertex );
+		//ABMap!( Edge, Vertex ) midpoints = new ABMap!( Edge, Vertex );
+		Vertex[Edge] midpoints;
 		
 		// The face points are positioned as the average of the positions of the face's original vertices;
 		foreach ( n, f; faces )
@@ -196,9 +197,10 @@ class SmoothOperation : Operation
 			//writefln( "vemap.length: %d", vemap.length);
 			foreach ( vf; P.faces )
 			{
-	
 				if ( !( vf in vfmap ) )
+				{
 					continue;
+				}
 				
 				F += vfmap[vf];
 
@@ -217,7 +219,15 @@ class SmoothOperation : Operation
 			foreach ( ve; P.edges )
 			{
 				if ( !( ve in vemap ) )
+				{
+					/*Vertex vt = new Vertex( null, 0, 0, 0 );
+					vt += ve.va;
+					vt += ve.vb;
+					vt /= 2;
+					R += vt;
+					b++;*/
 					continue;
+				}
 				
 				R += midpoints[ve];
 
@@ -231,6 +241,8 @@ class SmoothOperation : Operation
 			R /= b;
 			
 			float n = b;
+			
+			if ( n < 4 ) n = 4;
 			
 			Vertex PC = (F + (R*2) + ((n-3) * P)) / n;
 			

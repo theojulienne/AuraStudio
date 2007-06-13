@@ -131,6 +131,7 @@ class InsetOperation : Operation
 	{
 		foreach ( f; ifaces )
 		{
+			// inset relative to 100% moving in
 			f.update( 1-value );
 		}
 	}

@@ -41,7 +41,10 @@ class ScaleGroup
 	void update( float value )
 	{
 		int a = 0;
+		
+		// scale relative to 100% moving out
 		value = 1+value;
+		
 		foreach ( v; verts )
 		{
 			Vertex ov = orig_verts[a];

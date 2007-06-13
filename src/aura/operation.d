@@ -9,6 +9,7 @@ class Operation
 	// prepares for a new usage of the operation
 	abstract bool prepare( Selection sel )
 	{
+		// value is 0-based
 		_value = 0;
 		
 		Cursor.capture( );

@@ -52,7 +52,7 @@ class RotateGroup
 			Vertex p = new Vertex( null, 0, 0, 0 );
 			
 			// translate to origin
-			p = centre - v;
+			p = v - centre;
 			
 			// axis to rotate around
 			float X = 0, Y = 0, Z = 0;

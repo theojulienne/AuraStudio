@@ -241,7 +241,7 @@ class AuraWindow : WindowWidget {
 			}
 		}
 		
-		if ( key == '+' ) {
+		if ( key == '+' || key == '=' ) {
 			sel.grow( );
 		}
 		

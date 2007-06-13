@@ -233,12 +233,160 @@ class Selection
 	
 	void grow( )
 	{
-		// implement me
+		if ( mode == EditMode.Face )
+		{
+			// Construct a temporary list of faces that are neighbors
+			// to currently selected faces (otherwise we may end up
+			// selecting every single face)
+			
+			FaceList fl = new FaceList;
+			
+			foreach ( f; sel_faces )
+			{
+				foreach ( e; f.edges )
+				{
+					foreach ( nf; e.faces )
+					{
+						fl.appendUnique( nf );
+					}
+				}
+			}
+			
+			foreach ( f; fl )
+			{
+				select( f, false, true );
+			}
+		}
+		else if ( mode == EditMode.Edge )
+		{
+			EdgeList el = new EdgeList;
+			
+			foreach ( e; sel_edges )
+			{
+				void appendEdgesOfVert( Vertex v )
+				{
+					foreach ( ve; v.edges )
+					{
+						el.append( ve );
+					}
+				}
+				
+				appendEdgesOfVert( e.va );
+				appendEdgesOfVert( e.vb );
+			}
+			
+			foreach ( e; el )
+			{
+				if ( !e.isReal )
+					continue;
+				
+				select( e, false, true );
+			}
+		}
+		else if ( mode == EditMode.Vertex )
+		{
+			VertexList vl = new VertexList;
+			
+			foreach ( v; sel_verts )
+			{
+				foreach ( e; v.edges )
+				{
+					if ( !e.isReal )
+						continue;
+					
+					vl.append( e.va );
+					vl.append( e.vb );
+				}
+			}
+			
+			foreach ( v; vl )
+			{
+				select( v, false, true );
+			}
+		}
 	}				
 	
 	void shrink( )
 	{
-		// implement me
+		if ( mode == EditMode.Face )
+		{
+			FaceList fl = new FaceList;
+			
+			foreach ( f; sel_faces )
+			{
+				bool neighbor_selected = true;
+				
+				foreach ( e; f.edges )
+				{
+					foreach ( nf; e.faces )
+					{
+						if ( !nf.selected )
+							neighbor_selected = false;
+					}
+				}
+				
+				if ( !neighbor_selected )
+					fl.append( f );
+			}
+			
+			foreach ( f; fl )
+			{
+				select( f, false, false );
+			}
+		}
+		else if ( mode == EditMode.Edge )
+		{
+			EdgeList el = new EdgeList;
+			
+			foreach ( e; sel_edges )
+			{
+				bool neighbor_selected = true;
+				
+				void appendEdgesOfVert( Vertex v )
+				{
+					foreach ( ve; v.edges )
+					{
+						if ( !ve.isReal )
+							continue;
+						
+						if ( !ve.selected )
+							neighbor_selected = false;
+					}
+				}
+				
+				appendEdgesOfVert( e.va );
+				appendEdgesOfVert( e.vb );
+				
+				if ( !neighbor_selected )
+					el.append( e );
+			}
+			
+			foreach ( e; el )
+			{
+				select( e, false, false );
+			}
+		}
+		else if ( mode == EditMode.Vertex )
+		{
+			VertexList vl = new VertexList;
+			
+			foreach ( v; sel_verts )
+			{
+				foreach ( e; v.edges )
+				{
+					if ( !e.isReal )
+						continue;
+					
+					if ( !e.va.selected || !e.vb.selected )
+						vl.append( v );
+				}
+			}
+			
+			foreach ( v; vl )
+			{
+				select( v, false, false );
+			}
+		}
 	}
 	
 	void selectSimilar( )

@@ -163,6 +163,7 @@ class AuraWindow : WindowWidget {
 		
 		appendToP( face_menu, "Inset", new InsetOperation );
 		appendToP( face_menu, "Smooth", new SmoothOperation);
+		appendToP( face_menu, "*Bridge");
 		
 		i = appendToP( edge_menu, "Move" );
 			appendTo( edge_menu, i, "*Normal", new MoveOperation(MoveOperation.DirectionN) );

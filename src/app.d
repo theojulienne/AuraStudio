@@ -275,6 +275,9 @@ class AuraWindow : WindowWidget {
 	
 	void context( CEvent evt, CObject obj )
 	{
+		if ( curr_op !is null )
+			clicked( evt, obj );
+		
 		sel.clearHot( );
 		if ( edmode == EditMode.Body )
 			body_menu.popup( );

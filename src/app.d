@@ -25,6 +25,7 @@ import aura.operations.inset;
 import aura.operations.extrude;
 import aura.operations.move;
 import aura.operations.smooth;
+import aura.operations.scale;
 
 class AuraWindow : WindowWidget {
 	Body model;
@@ -145,11 +146,11 @@ class AuraWindow : WindowWidget {
 			appendTo( face_menu, i, "*Y");
 			appendTo( face_menu, i, "*Z");
 		
-		i = appendToP( face_menu, "*Scale" );
-			appendTo( face_menu, i, "*Uniform");
-			appendTo( face_menu, i, "*X");
-			appendTo( face_menu, i, "*Y");
-			appendTo( face_menu, i, "*Z");
+		i = appendToP( face_menu, "Scale" );
+			appendTo( face_menu, i, "Uniform", new ScaleOperation(ScaleOperation.scaleUniform) );
+			appendTo( face_menu, i, "X", new ScaleOperation(ScaleOperation.scaleX) );
+			appendTo( face_menu, i, "Y", new ScaleOperation(ScaleOperation.scaleY) );
+			appendTo( face_menu, i, "Z", new ScaleOperation(ScaleOperation.scaleZ) );
 			appendTo( face_menu, i, "*Radial X");
 			appendTo( face_menu, i, "*Radial Y");
 			appendTo( face_menu, i, "*Radial Z");
@@ -169,18 +170,45 @@ class AuraWindow : WindowWidget {
 			appendTo( edge_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
 			appendTo( edge_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
 		
+		i = appendToP( edge_menu, "Scale" );
+			appendTo( edge_menu, i, "Uniform", new ScaleOperation(ScaleOperation.scaleUniform) );
+			appendTo( edge_menu, i, "X", new ScaleOperation(ScaleOperation.scaleX) );
+			appendTo( edge_menu, i, "Y", new ScaleOperation(ScaleOperation.scaleY) );
+			appendTo( edge_menu, i, "Z", new ScaleOperation(ScaleOperation.scaleZ) );
+			appendTo( edge_menu, i, "*Radial X");
+			appendTo( edge_menu, i, "*Radial Y");
+			appendTo( edge_menu, i, "*Radial Z");
+				
 		i = appendToP( verts_menu, "Move" );
 			appendTo( verts_menu, i, "*Normal", new MoveOperation(MoveOperation.DirectionN) );
 			appendTo( verts_menu, i, "X", new MoveOperation(MoveOperation.DirectionX) );
 			appendTo( verts_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
 			appendTo( verts_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
-		
+
+		i = appendToP( verts_menu, "Scale" );
+			appendTo( verts_menu, i, "Uniform", new ScaleOperation(ScaleOperation.scaleUniform) );
+			appendTo( verts_menu, i, "X", new ScaleOperation(ScaleOperation.scaleX) );
+			appendTo( verts_menu, i, "Y", new ScaleOperation(ScaleOperation.scaleY) );
+			appendTo( verts_menu, i, "Z", new ScaleOperation(ScaleOperation.scaleZ) );
+			appendTo( verts_menu, i, "*Radial X");
+			appendTo( verts_menu, i, "*Radial Y");
+			appendTo( verts_menu, i, "*Radial Z");
+					
 		i = appendToP( body_menu, "Move" );
 			appendTo( body_menu, i, "*Normal", new MoveOperation(MoveOperation.DirectionN) );
 			appendTo( body_menu, i, "X", new MoveOperation(MoveOperation.DirectionX) );
 			appendTo( body_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
 			appendTo( body_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
-			
+
+		i = appendToP( body_menu, "Scale" );
+			appendTo( body_menu, i, "Uniform", new ScaleOperation(ScaleOperation.scaleUniform) );
+			appendTo( body_menu, i, "X", new ScaleOperation(ScaleOperation.scaleX) );
+			appendTo( body_menu, i, "Y", new ScaleOperation(ScaleOperation.scaleY) );
+			appendTo( body_menu, i, "Z", new ScaleOperation(ScaleOperation.scaleZ) );
+			appendTo( body_menu, i, "*Radial X");
+			appendTo( body_menu, i, "*Radial Y");
+			appendTo( body_menu, i, "*Radial Z");		
+				
 		appendToP( body_menu, "*Smooth" );
 	}
 	

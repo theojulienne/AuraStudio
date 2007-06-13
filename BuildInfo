@@ -16,6 +16,7 @@ targets
 			src/aura/operations/extrude.d
 			src/aura/operations/move.d
 			src/aura/operations/smooth.d
+			src/aura/operations/scale.d
 			src/aura/model/all.d
 			src/aura/model/mbody.d
 			src/aura/model/edge.d

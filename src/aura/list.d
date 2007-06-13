@@ -86,12 +86,13 @@ module aura.list;
 template MixList(T)
 {
 	T[] l;
-	
+		
 	void append( T i )
 	{
 		int n = l.length;
 		l.length = n+1;
 		l[n] = i;
+		
 	}
 	
 	void appendUnique( T i )

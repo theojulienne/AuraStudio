@@ -38,6 +38,8 @@ class AuraWindow : WindowWidget {
 	
 	Selection sel;
 	
+	ListItem mode_body, mode_face, mode_edge, mode_vertex;
+	
 	this( ) {
 		super( null, new Bounds( 100, 50, 1024, 768 ), 0 );
 		
@@ -58,19 +60,17 @@ class AuraWindow : WindowWidget {
 		
 		sel = new Selection;
 		
-		ListItem n, m;
-		
 		mode = new ComboWidget( this, lt.bounds("mode") );
-		n = mode.appendItem( "Body" );
-		n.appdata = box(EditMode.Body);
-		m = mode.appendItem( "Face" );
-		m.appdata = box(EditMode.Face);
-		n = mode.appendItem( "Edge" );
-		n.appdata = box(EditMode.Edge);
-		n = mode.appendItem( "Vertex" );
-		n.appdata = box(EditMode.Vertex);
+		mode_body = mode.appendItem( "Body" );
+		mode_body.appdata = box(EditMode.Body);
+		mode_face = mode.appendItem( "Face" );
+		mode_face.appdata = box(EditMode.Face);
+		mode_edge = mode.appendItem( "Edge" );
+		mode_edge.appdata = box(EditMode.Edge);
+		mode_vertex = mode.appendItem( "Vertex" );
+		mode_vertex.appdata = box(EditMode.Vertex);
 		mode.add_handler( "selected", &this.mode_selected );
-		mode.selected = m;
+		mode.selected = mode_face;
 		
 		glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
 		glClearColor(0.0f, 0.0f, 0.0f, 0.5f);				// Black Background
@@ -232,7 +232,7 @@ class AuraWindow : WindowWidget {
 			sel.resetSelection( );
 		}
 		
-		if ( key == 's' ) {
+		else if ( key == 's' ) {
 			if ( edmode == EditMode.Body || edmode == EditMode.Face )
 			{
 				SmoothOperation s = new SmoothOperation;
@@ -241,17 +241,26 @@ class AuraWindow : WindowWidget {
 			}
 		}
 		
-		if ( key == '+' || key == '=' ) {
+		else if ( key == '+' || key == '=' ) {
 			sel.grow( );
 		}
 		
-		if ( key == '-' ) {
+		else if ( key == '-' ) {
 			sel.shrink( );
 		}
 		
-		if ( key == 'i' ) {
+		else if ( key == 'i' ) {
 			sel.selectSimilar( );
 		}
+		
+		else if ( key == 'b' )
+			mode.selected = mode_body;
+		else if ( key == 'e' )
+			mode.selected = mode_edge;
+		else if ( key == 'f' )
+			mode.selected = mode_face;
+		else if ( key == 'v' )
+			mode.selected = mode_vertex;
 	}
 	
 	void runOperation( CEvent evt, CObject obj )

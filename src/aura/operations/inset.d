@@ -131,7 +131,7 @@ class InsetOperation : Operation
 	{
 		foreach ( f; ifaces )
 		{
-			f.update( value );
+			f.update( 1-value );
 		}
 	}
 	

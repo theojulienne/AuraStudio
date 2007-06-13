@@ -9,7 +9,7 @@ class Operation
 	// prepares for a new usage of the operation
 	abstract bool prepare( Selection sel )
 	{
-		_value = 1;
+		_value = 0;
 		
 		Cursor.capture( );
 		Cursor.hide( );

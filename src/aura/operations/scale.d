@@ -41,7 +41,7 @@ class ScaleGroup
 	void update( float value )
 	{
 		int a = 0;
-		
+		value = 1+value;
 		foreach ( v; verts )
 		{
 			Vertex ov = orig_verts[a];

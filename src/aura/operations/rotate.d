@@ -73,7 +73,6 @@ class RotateGroup
 				// implement me with normal
 			}
 			
-			// something a bit dodgy, starting angle is iffy
 			float c = cos(value);
 			float t = (1 - c);
 			float s = sin(value);

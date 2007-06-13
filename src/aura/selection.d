@@ -233,17 +233,17 @@ class Selection
 	
 	void grow( )
 	{
-
-	}
+		// implement me
+	}				
 	
 	void shrink( )
 	{
-
+		// implement me
 	}
 	
 	void selectSimilar( )
 	{
-		
+		// implement me		
 	}
 	
 	Face[] getFaces( )

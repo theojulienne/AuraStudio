@@ -26,6 +26,7 @@ import aura.operations.extrude;
 import aura.operations.move;
 import aura.operations.smooth;
 import aura.operations.scale;
+import aura.operations.rotate;
 
 class AuraWindow : WindowWidget {
 	Body model;
@@ -139,12 +140,11 @@ class AuraWindow : WindowWidget {
 			appendTo( face_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
 			appendTo( face_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
 			
-		i = appendToP( face_menu, "*Rotate");
+		i = appendToP( face_menu, "Rotate");
 			appendTo( face_menu, i, "*Normal");
-			appendTo( face_menu, i, "*Free");
-			appendTo( face_menu, i, "*X");
-			appendTo( face_menu, i, "*Y");
-			appendTo( face_menu, i, "*Z");
+			appendTo( face_menu, i, "X", new RotateOperation(RotateOperation.axisX) );
+			appendTo( face_menu, i, "Y", new RotateOperation(RotateOperation.axisY) );
+			appendTo( face_menu, i, "Z", new RotateOperation(RotateOperation.axisZ) );
 		
 		i = appendToP( face_menu, "Scale" );
 			appendTo( face_menu, i, "Uniform", new ScaleOperation(ScaleOperation.scaleUniform) );
@@ -170,7 +170,13 @@ class AuraWindow : WindowWidget {
 			appendTo( edge_menu, i, "X", new MoveOperation(MoveOperation.DirectionX) );
 			appendTo( edge_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
 			appendTo( edge_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
-		
+			
+		i = appendToP( edge_menu, "Rotate");
+			appendTo( edge_menu, i, "*Normal");
+			appendTo( edge_menu, i, "X", new RotateOperation(RotateOperation.axisX) );
+			appendTo( edge_menu, i, "Y", new RotateOperation(RotateOperation.axisY) );
+			appendTo( edge_menu, i, "Z", new RotateOperation(RotateOperation.axisZ) );
+				
 		i = appendToP( edge_menu, "Scale" );
 			appendTo( edge_menu, i, "Uniform", new ScaleOperation(ScaleOperation.scaleUniform) );
 			appendTo( edge_menu, i, "X", new ScaleOperation(ScaleOperation.scaleX) );
@@ -186,6 +192,12 @@ class AuraWindow : WindowWidget {
 			appendTo( verts_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
 			appendTo( verts_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
 
+		i = appendToP( verts_menu, "Rotate");
+			appendTo( verts_menu, i, "*Normal");
+			appendTo( verts_menu, i, "X", new RotateOperation(RotateOperation.axisX) );
+			appendTo( verts_menu, i, "Y", new RotateOperation(RotateOperation.axisY) );
+			appendTo( verts_menu, i, "Z", new RotateOperation(RotateOperation.axisZ) );
+			
 		i = appendToP( verts_menu, "Scale" );
 			appendTo( verts_menu, i, "Uniform", new ScaleOperation(ScaleOperation.scaleUniform) );
 			appendTo( verts_menu, i, "X", new ScaleOperation(ScaleOperation.scaleX) );
@@ -201,6 +213,12 @@ class AuraWindow : WindowWidget {
 			appendTo( body_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
 			appendTo( body_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
 
+		i = appendToP( body_menu, "Rotate");
+			appendTo( body_menu, i, "*Normal");
+			appendTo( body_menu, i, "X", new RotateOperation(RotateOperation.axisX) );
+			appendTo( body_menu, i, "Y", new RotateOperation(RotateOperation.axisY) );
+			appendTo( body_menu, i, "Z", new RotateOperation(RotateOperation.axisZ) );
+			
 		i = appendToP( body_menu, "Scale" );
 			appendTo( body_menu, i, "Uniform", new ScaleOperation(ScaleOperation.scaleUniform) );
 			appendTo( body_menu, i, "X", new ScaleOperation(ScaleOperation.scaleX) );

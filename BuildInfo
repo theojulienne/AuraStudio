@@ -61,6 +61,7 @@ targets
 			src/claro/graphics/layout.d
 			src/claro/graphics/listitem.d
 			src/claro/graphics/stock.d
+			src/claro/graphics/cursor.d
 			src/claro/graphics/widget.d
 			src/claro/graphics/widgets/button.d
 			src/claro/graphics/widgets/canvas.d

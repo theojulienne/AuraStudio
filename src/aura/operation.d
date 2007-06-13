@@ -1,18 +1,18 @@
 module aura.operation;
 
+import claro.graphics.all;
+
 public import aura.selection;
 
 class Operation
 {
-	bool has_mouse_started = false;
-	int mouse_lastx, mouse_lasty;
-	float mouse_value;
-	
 	// prepares for a new usage of the operation
 	abstract bool prepare( Selection sel )
 	{
-		has_mouse_started = false;
 		_value = 1;
+		
+		Cursor.capture( );
+		Cursor.hide( );
 		
 		return true;
 	}
@@ -20,21 +20,7 @@ class Operation
 	// 
 	void updateFromMouse( int x, int y )
 	{
-		if ( has_mouse_started == false )
-		{
-			mouse_lastx = x;
-			mouse_lasty = y;
-			has_mouse_started = true;
-			return;
-		}
-		
-		int mdx;
-		
-		mdx = x - mouse_lastx;
-		mouse_lastx = x;
-		mouse_lasty = y;
-		
-		value = value + (mdx * 0.01);
+		value = value + (x * 0.01);
 	}
 	
 	float _value;
@@ -59,6 +45,7 @@ class Operation
 	// cleans up from the operation
 	abstract void cleanup( )
 	{
-		
+		Cursor.show( );
+		Cursor.release( );
 	}
 }

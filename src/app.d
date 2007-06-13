@@ -308,6 +308,9 @@ class AuraWindow : WindowWidget {
 		if ( middle_tracking )
 			return;
 		
+		Cursor.capture( );
+		Cursor.hide( );
+		
 		middle_tracking = true;
 		mouse_lastx = x;
 		mouse_lasty = y;
@@ -316,6 +319,9 @@ class AuraWindow : WindowWidget {
 	void middlereleased( CEvent evt, CObject obj )
 	{
 		middle_tracking = false;
+		
+		Cursor.show( );
+		Cursor.release( );
 	}
 	
 	void scrollwheel( CEvent evt, CObject obj )
@@ -342,8 +348,8 @@ class AuraWindow : WindowWidget {
 		{
 			int a, b;
 			
-			a = x - mouse_lastx;
-			b = y - mouse_lasty;
+			a = evt.getArgumentAsInt("deltaX");//x - mouse_lastx;
+			b = evt.getArgumentAsInt("deltaY");//y - mouse_lasty;
 
 			mouse_lastx = x;
 			mouse_lasty = y;
@@ -354,7 +360,7 @@ class AuraWindow : WindowWidget {
 			return;
 		} else if ( curr_op !is null )
 		{
-			curr_op.updateFromMouse( x, y );
+			curr_op.updateFromMouse( evt.getArgumentAsInt("deltaX"), evt.getArgumentAsInt("deltaY") );
 			return;
 		}
 		

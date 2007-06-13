@@ -114,6 +114,11 @@ template MixList(T)
 		return -1;
 	}
 	
+	bool opIn_r( T i )
+	{
+		return (find(i)>-1);
+	}
+	
 	void remove( T i )
 	{
 		T[] n;
@@ -143,7 +148,10 @@ template MixList(T)
 	
 	T[] opAssign( T[] il )
 	{
-		l = il;
+		l.length = il.length;
+		
+		foreach ( a, i; il )
+			l[a] = i;
 		
 		return l;
 	}

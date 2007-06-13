@@ -151,9 +151,9 @@ class AuraWindow : WindowWidget {
 			appendTo( face_menu, i, "X", new ScaleOperation(ScaleOperation.scaleX) );
 			appendTo( face_menu, i, "Y", new ScaleOperation(ScaleOperation.scaleY) );
 			appendTo( face_menu, i, "Z", new ScaleOperation(ScaleOperation.scaleZ) );
-			appendTo( face_menu, i, "*Radial X");
-			appendTo( face_menu, i, "*Radial Y");
-			appendTo( face_menu, i, "*Radial Z");
+			appendTo( face_menu, i, "Radial X", new ScaleOperation(ScaleOperation.scaleRadialX) );
+			appendTo( face_menu, i, "Radial Y", new ScaleOperation(ScaleOperation.scaleRadialY) );
+			appendTo( face_menu, i, "Radial Z", new ScaleOperation(ScaleOperation.scaleRadialZ) );
 		
 		i = appendToP( face_menu, "Extrude" );
 			appendTo( face_menu, i, "Normal", new ExtrudeOperation(ExtrudeOperation.DirectionN) );
@@ -175,9 +175,9 @@ class AuraWindow : WindowWidget {
 			appendTo( edge_menu, i, "X", new ScaleOperation(ScaleOperation.scaleX) );
 			appendTo( edge_menu, i, "Y", new ScaleOperation(ScaleOperation.scaleY) );
 			appendTo( edge_menu, i, "Z", new ScaleOperation(ScaleOperation.scaleZ) );
-			appendTo( edge_menu, i, "*Radial X");
-			appendTo( edge_menu, i, "*Radial Y");
-			appendTo( edge_menu, i, "*Radial Z");
+			appendTo( edge_menu, i, "Radial X", new ScaleOperation(ScaleOperation.scaleRadialX) );
+			appendTo( edge_menu, i, "Radial Y", new ScaleOperation(ScaleOperation.scaleRadialY) );
+			appendTo( edge_menu, i, "Radial Z", new ScaleOperation(ScaleOperation.scaleRadialZ) );
 				
 		i = appendToP( verts_menu, "Move" );
 			appendTo( verts_menu, i, "*Normal", new MoveOperation(MoveOperation.DirectionN) );
@@ -190,9 +190,9 @@ class AuraWindow : WindowWidget {
 			appendTo( verts_menu, i, "X", new ScaleOperation(ScaleOperation.scaleX) );
 			appendTo( verts_menu, i, "Y", new ScaleOperation(ScaleOperation.scaleY) );
 			appendTo( verts_menu, i, "Z", new ScaleOperation(ScaleOperation.scaleZ) );
-			appendTo( verts_menu, i, "*Radial X");
-			appendTo( verts_menu, i, "*Radial Y");
-			appendTo( verts_menu, i, "*Radial Z");
+			appendTo( verts_menu, i, "Radial X", new ScaleOperation(ScaleOperation.scaleRadialX) );
+			appendTo( verts_menu, i, "Radial Y", new ScaleOperation(ScaleOperation.scaleRadialY) );
+			appendTo( verts_menu, i, "Radial Z", new ScaleOperation(ScaleOperation.scaleRadialZ) );
 					
 		i = appendToP( body_menu, "Move" );
 			appendTo( body_menu, i, "*Normal", new MoveOperation(MoveOperation.DirectionN) );
@@ -205,9 +205,9 @@ class AuraWindow : WindowWidget {
 			appendTo( body_menu, i, "X", new ScaleOperation(ScaleOperation.scaleX) );
 			appendTo( body_menu, i, "Y", new ScaleOperation(ScaleOperation.scaleY) );
 			appendTo( body_menu, i, "Z", new ScaleOperation(ScaleOperation.scaleZ) );
-			appendTo( body_menu, i, "*Radial X");
-			appendTo( body_menu, i, "*Radial Y");
-			appendTo( body_menu, i, "*Radial Z");		
+			appendTo( body_menu, i, "Radial X", new ScaleOperation(ScaleOperation.scaleRadialX) );
+			appendTo( body_menu, i, "Radial Y", new ScaleOperation(ScaleOperation.scaleRadialY) );
+			appendTo( body_menu, i, "Radial Z", new ScaleOperation(ScaleOperation.scaleRadialZ) );		
 				
 		appendToP( body_menu, "*Smooth" );
 	}

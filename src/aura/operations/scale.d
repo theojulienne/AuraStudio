@@ -49,28 +49,30 @@ class ScaleGroup
 			v.setTo( ov );
 			
 			
-			if ( type == ScaleOperation.scaleX )
+			if ( type == ScaleOperation.scaleX 
+				|| type == ScaleOperation.scaleUniform
+				|| type == ScaleOperation.scaleRadialY
+				|| type == ScaleOperation.scaleRadialZ )
 			{
 				v.x = centre.x + (v.x - centre.x) * value;
-			}
-			else
-			if ( type == ScaleOperation.scaleY )
-			{
-				v.y = centre.y + (v.y - centre.y) * value;
-			}
-			else
-			if ( type == ScaleOperation.scaleZ )
-			{
-				v.z = centre.z + (v.z - centre.z) * value;
-			}
-			else
-			if ( type == ScaleOperation.scaleUniform )
-			{
-				v.x = centre.x + (v.x - centre.x) * value;
-				v.y = centre.y + (v.y - centre.y) * value;
-				v.z = centre.z + (v.z - centre.z) * value;
 			}
 			
+			if ( type == ScaleOperation.scaleY 
+				|| type == ScaleOperation.scaleUniform
+				|| type == ScaleOperation.scaleRadialX
+				|| type == ScaleOperation.scaleRadialZ )
+			{
+				v.y = centre.y + (v.y - centre.y) * value;
+			}
+			
+			if ( type == ScaleOperation.scaleZ
+				|| type == ScaleOperation.scaleUniform
+				|| type == ScaleOperation.scaleRadialX
+				|| type == ScaleOperation.scaleRadialY)
+			{
+				v.z = centre.z + (v.z - centre.z) * value;
+			}
+
 			a++;
 		}
 	}

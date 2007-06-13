@@ -86,7 +86,10 @@ module aura.list;
 template MixList(T)
 {
 	T[] l;
-		
+	T[] searchTree;
+	
+	
+	
 	void append( T i )
 	{
 		int n = l.length;

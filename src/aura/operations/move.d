@@ -37,11 +37,9 @@ class MoveGroup
 		{
 			SubTri s = new SubTri( verts[0], verts[1], verts[2] );
 			Normal tempn = s.calculateNormal( );
-			tempn.normalize( );
 			n += tempn;
 			numNormals++;
 		}
-		n /= numNormals;
 		n.normalize( );
 		
 		// calculate centre

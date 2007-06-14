@@ -208,13 +208,11 @@ class AuraWindow : WindowWidget {
 			appendTo( verts_menu, i, "Radial Z", new ScaleOperation(ScaleOperation.scaleRadialZ) );
 					
 		i = appendToP( body_menu, "Move" );
-			appendTo( body_menu, i, "Normal?", new MoveOperation(MoveOperation.DirectionN) );
 			appendTo( body_menu, i, "X", new MoveOperation(MoveOperation.DirectionX) );
 			appendTo( body_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
 			appendTo( body_menu, i, "Z", new MoveOperation(MoveOperation.DirectionZ) );
 
 		i = appendToP( body_menu, "Rotate");
-			appendTo( body_menu, i, "Normal?",  new RotateOperation(RotateOperation.axisN) );
 			appendTo( body_menu, i, "X", new RotateOperation(RotateOperation.axisX) );
 			appendTo( body_menu, i, "Y", new RotateOperation(RotateOperation.axisY) );
 			appendTo( body_menu, i, "Z", new RotateOperation(RotateOperation.axisZ) );

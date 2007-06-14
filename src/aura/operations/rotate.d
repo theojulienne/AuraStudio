@@ -9,12 +9,14 @@ import aura.editing;
 
 import aura.list;
 
+
 class RotateGroup
 {
 	VertexList verts;
 	VertexList orig_verts;
 	
 	Vertex centre;
+	Normal n;
 	
 	int type = 1;
 	
@@ -26,10 +28,25 @@ class RotateGroup
 	void generateCenterAndBackup( )
 	{
 		orig_verts = new VertexList;
+
 		
+		// calculate normal (not quite right?)
+		n.setToVertex( new Vertex( null, 0 ,0 ,0 ) );
+		int numNormals = 0;
+		for ( int i = 0; i < verts.length; i+=3 )
+		{
+			SubTri s = new SubTri( verts[0], verts[1], verts[2] );
+			Normal tempn = s.calculateNormal( );
+			tempn.normalize( );
+			n += tempn;
+			numNormals++;
+		}
+		n /= numNormals;
+		n.normalize( );
+		
+		// calculate centre
 		int numVerts = 0;
 		centre = new Vertex( null, 0, 0, 0 );
-		
 		foreach ( v; verts )
 		{
 			orig_verts.append( new Vertex( v ) );
@@ -70,7 +87,10 @@ class RotateGroup
 			} else
 			if ( type == RotateOperation.axisN ) 
 			{
-				// implement me with normal
+				X = n.x;
+				Y = n.y;
+				Z = n.z;
+				writefln("normal XYZ: %s %s %s", n.x, n.y, n.z);
 			}
 			
 			float c = cos(value);

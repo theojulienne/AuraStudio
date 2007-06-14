@@ -29,28 +29,19 @@ class RotateGroup
 	{
 		orig_verts = new VertexList;
 
-		
-		// calculate normal (not quite right?)
-		n.setToVertex( new Vertex( null, 0 ,0 ,0 ) );
-		int numNormals = 0;
-		for ( int i = 0; i < verts.length; i+=3 )
-		{
-			SubTri s = new SubTri( verts[0], verts[1], verts[2] );
-			Normal tempn = s.calculateNormal( );
-			n += tempn;
-			numNormals++;
-		}
-		n.normalize( );
-		
-		// calculate centre
+		// calculate centre and normal(?)
 		int numVerts = 0;
 		centre = new Vertex( null, 0, 0, 0 );
 		foreach ( v; verts )
 		{
 			orig_verts.append( new Vertex( v ) );
+			
 			centre += v;
 			numVerts++;
 		}
+		
+		n.setToVertex( centre );
+		n.normalize( );
 		centre /= numVerts;
 	}
 	

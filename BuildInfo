@@ -14,6 +14,7 @@ targets
 			src/aura/operation.d
 			src/aura/operations/inset.d
 			src/aura/operations/extrude.d
+			src/aura/operations/bridge.d
 			src/aura/operations/move.d
 			src/aura/operations/smooth.d
 			src/aura/operations/scale.d

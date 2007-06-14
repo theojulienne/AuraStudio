@@ -27,6 +27,7 @@ import aura.operations.move;
 import aura.operations.smooth;
 import aura.operations.scale;
 import aura.operations.rotate;
+import aura.operations.bridge;
 
 class AuraWindow : WindowWidget {
 	Body model;
@@ -162,8 +163,8 @@ class AuraWindow : WindowWidget {
 			appendTo( face_menu, i, "Z", new ExtrudeOperation(ExtrudeOperation.DirectionZ) );
 		
 		appendToP( face_menu, "Inset", new InsetOperation );
-		appendToP( face_menu, "Smooth", new SmoothOperation);
-		appendToP( face_menu, "*Bridge");
+		appendToP( face_menu, "Smooth", new SmoothOperation );
+		appendToP( face_menu, "*Bridge", new BridgeOperation );
 		
 		i = appendToP( edge_menu, "Move" );
 			appendTo( edge_menu, i, "Normal?", new MoveOperation(MoveOperation.DirectionN) );

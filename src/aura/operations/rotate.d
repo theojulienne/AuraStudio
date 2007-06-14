@@ -29,7 +29,7 @@ class RotateGroup
 	{
 		orig_verts = new VertexList;
 
-		// calculate centre and normal(?)
+		// calculate centre
 		int numVerts = 0;
 		centre = new Vertex( null, 0, 0, 0 );
 		foreach ( v; verts )
@@ -39,10 +39,21 @@ class RotateGroup
 			centre += v;
 			numVerts++;
 		}
-		
-		n.setToVertex( centre );
-		n.normalize( );
 		centre /= numVerts;
+		
+		// calculate normal? using the Dave-method
+		// better to calculate face/vertex normals properly
+		Normal v1;
+		Normal v2;
+		n.setToVertex( new Vertex( null, 0, 0, 0 ) );
+		for( int i = 0; i < verts.length; i+=2)
+		{
+			v1.setToVertex( verts[i] - centre );
+			v2.setToVertex( verts[i+1] - centre );
+			n += v1.cross( v2 );
+		}
+		n.normalize( );
+		
 	}
 	
 	void update( float value )

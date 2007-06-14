@@ -48,6 +48,7 @@ class Face
 			normal += t.calculateNormal( );
 		}
 		
+		// this is unnecessary
 		normal /= tris.length;
 		
 		normal.normalize();

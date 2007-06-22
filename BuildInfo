@@ -23,9 +23,9 @@ targets
 			src/aura/model/mbody.d
 			src/aura/model/edge.d
 			src/aura/model/face.d
-			src/aura/model/normal.d
 			src/aura/model/subtri.d
 			src/aura/model/vertex.d
+			src/aura/model/vector.d
 			src/opengl/gl.d
 			src/claro/core.d
 			src/claro/base/all.d

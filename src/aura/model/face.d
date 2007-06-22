@@ -6,7 +6,7 @@ import aura.model.mbody;
 import aura.model.vertex;
 import aura.model.edge;
 import aura.model.subtri;
-import aura.model.normal;
+import aura.model.vector;
 
 import opengl.gl;
 import std.stdio;
@@ -30,7 +30,7 @@ class Face
 	bool selected = false;
 	bool hot = false;
 	
-	Normal normal;
+	Vector normal;
 	
 	this( )
 	{
@@ -39,7 +39,7 @@ class Face
 		tris = new SubTriList;
 	}
 	
-	Normal calculateNormal( )
+	Vector calculateNormal( )
 	{
 		normal.zero( );
 		

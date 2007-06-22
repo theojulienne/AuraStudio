@@ -1,10 +1,10 @@
-module aura.model.normal;
+module aura.model.vector;
 
 import aura.model.vertex;
 
 import std.math;
 
-struct Normal
+struct Vector
 {
 	float x, y, z;
 	
@@ -42,7 +42,7 @@ struct Normal
 		return 0;
 	}
 	
-	int opAddAssign( Normal n )
+	int opAddAssign( Vector n )
 	{
 		x += n.x;
 		y += n.y;
@@ -51,7 +51,7 @@ struct Normal
 		return 0;
 	}
 	
-	int opDivAssign( int n )
+	int opDivAssign( float n )
 	{
 		x /= n;
 		y /= n;
@@ -60,9 +60,18 @@ struct Normal
 		return 0;
 	}
 	
-	Normal cross( Normal on )
+	int opMulAssign( float n )
 	{
-		Normal n;
+		x *= n;
+		y *= n;
+		z *= n;
+		
+		return 0;
+	}
+	
+	Vector cross( Vector on )
+	{
+		Vector n;
 		
 		n.x = y*on.z - z*on.y;				// Cross Product For Y - Z
 		n.y = z*on.x - x*on.z;				// Cross Product For X - Z

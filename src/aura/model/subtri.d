@@ -2,7 +2,7 @@ module aura.model.subtri;
 
 import aura.list;
 import aura.model.vertex;
-import aura.model.normal;
+import aura.model.vector;
 
 class SubTriList
 {
@@ -20,9 +20,9 @@ class SubTri
 		verts[2] = c;
 	}
 	
-	Normal calculateNormal( )
+	Vector calculateNormal( )
 	{
-	 	Normal v1, v2;
+	 	Vector v1, v2;
 		v1.setToVertex( verts[1] );
 		v1 -= verts[0];
 		v2.setToVertex( verts[2] );

@@ -62,7 +62,7 @@ class ExtrudeFace
 	void update( float value )
 	{
 		Vertex tmp = new Vertex( null, 0, 0, 0 );
-		Normal n = face.calculateNormal( );
+		Vector n = face.calculateNormal( );
 		
 		value *= 2;
 		

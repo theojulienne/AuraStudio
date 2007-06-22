@@ -16,7 +16,7 @@ class RotateGroup
 	VertexList orig_verts;
 	
 	Vertex centre;
-	Normal n;
+	Vector n;
 	
 	int type = 1;
 	
@@ -43,8 +43,8 @@ class RotateGroup
 		
 		// calculate normal? using the Dave-method
 		// better to calculate face/vertex normals properly
-		Normal v1;
-		Normal v2;
+		Vector v1;
+		Vector v2;
 		n.setToVertex( new Vertex( null, 0, 0, 0 ) );
 		for( int i = 0; i < verts.length; i+=2)
 		{

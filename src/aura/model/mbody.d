@@ -283,12 +283,12 @@ class Body
 				glLineWidth( w );
 				
 				glBegin( GL_LINES );
-				glVertex3f( e.va.x, e.va.y, e.va.z );
-				glVertex3f( e.vb.x, e.vb.y, e.vb.z );
+				e.va.glv( );
+				e.vb.glv( );
 				glEnd( );
 			}
 		}
-		
+		return;
 		if ( editMode == EditMode.Vertex )
 		{
 			glEnable(GL_POLYGON_OFFSET_POINT);
@@ -316,7 +316,7 @@ class Body
 
 					glBegin( GL_POINTS );
 					glColor3f( r, g, b );
-					glVertex3f( v.x, v.y, v.z );
+					v.glv( );
 					glEnd( );
 				}
 			}

@@ -70,29 +70,33 @@ class ExtrudeFace
 		
 		foreach ( v; face.verts )
 		{
-			v.setTo( orig_verts[a] );
+			Vector tv;
+			
+			tv.set( orig_verts[a] );
 			
 			if ( dir == ExtrudeOperation.DirectionX )
 			{
-				v.x += value;
+				tv.x += value;
 			}
 			else
 			if ( dir == ExtrudeOperation.DirectionY )
 			{
-				v.y += value;
+				tv.y += value;
 			}
 			else
 			if ( dir == ExtrudeOperation.DirectionZ )
 			{
-				v.z += value;
+				tv.z += value;
 			}
 			else
 			if ( dir == ExtrudeOperation.DirectionN )
 			{
-				v.x += value * n.x;
-				v.y += value * n.y;
-				v.z += value * n.z;
+				tv.x += value * n.x;
+				tv.y += value * n.y;
+				tv.z += value * n.z;
 			}
+			
+			v.vector = tv;
 			
 			a++;
 		}

@@ -6,7 +6,14 @@ import std.math;
 
 struct Vector
 {
-	float x, y, z;
+	float x=0, y=0, z=0;
+	
+	void set( float _x, float _y, float _z )
+	{
+		x = _x;
+		y = _y;
+		z = _z;
+	}
 	
 	void normalize( )
 	{
@@ -22,31 +29,28 @@ struct Vector
 		z /= len;						// Unit Normal Vector.
 	}
 	
-	int opAssign( Vertex v )
-	{
-		
-		return 0;
-	}
-	
 	void zero( )
 	{
 		x = y = z = 0;
 	}
 	
-	int opSubAssign( Vertex v )
-	{
-		x -= v.x;
-		y -= v.y;
-		z -= v.z;
-		
-		return 0;
-	}
+	int opAddAssign( Vertex v ) { return opAddAssign( v.vector ); }
+	int opSubAssign( Vertex v ) { return opSubAssign( v.vector ); }
 	
 	int opAddAssign( Vector n )
 	{
 		x += n.x;
 		y += n.y;
 		z += n.z;
+		
+		return 0;
+	}
+	
+	int opSubAssign( Vector n )
+	{
+		x -= n.x;
+		y -= n.y;
+		z -= n.z;
 		
 		return 0;
 	}
@@ -80,10 +84,55 @@ struct Vector
 		return n;
 	}
 	
-	void setToVertex( Vertex v )
+	Vector opAdd( Vector v )
+	{
+		Vector tv = *this;
+		tv += v;
+		return tv;
+	}
+	
+	Vector opSub( Vector v )
+	{
+		Vector tv = *this;
+		tv -= v;
+		return tv;
+	}
+	
+	Vector opMul( float n )
+	{
+		Vector tv = *this;
+		tv *= n;
+		return tv;
+	}
+	
+	Vector opDiv( float n )
+	{
+		Vector tv = *this;
+		tv /= n;
+		return tv;
+	}
+	
+	static Vector opCall( Vertex v )
+	{
+		Vector tv;
+		tv.set( v );
+		return tv;
+	}
+	
+	void set( Vector v )
 	{
 		x = v.x;
 		y = v.y;
 		z = v.z;
+	}
+	
+	void set( Vertex v )
+	{
+		set( v.vector );
+	}
+	
+	void setToVertex( Vertex v )
+	{
+		set( v );
 	}
 }

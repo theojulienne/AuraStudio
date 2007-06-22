@@ -4,6 +4,7 @@ import aura.list;
 import aura.model.mbody;
 import aura.model.face;
 import aura.model.edge;
+import aura.model.vector;
 
 import opengl.gl;
 import std.stdio;
@@ -27,7 +28,7 @@ struct Colour
 
 class Vertex
 {
-	float x, y, z;
+	Vector vector;
 	
 	Body p_body;
 	
@@ -41,17 +42,6 @@ class Vertex
 	void cleanReferencesToFace( Face f )
 	{
 		faces.remove( f );
-		/*
-		foreach ( a, tf; faces )
-		{
-			if ( tf != f )
-				continue;
-			
-			auto n = faces[0..a];
-			auto m = faces[a+1..length];
-			faces = n ~ m;
-			break;
-		}*/
 		
 		if ( faces.length == 0 )
 		{
@@ -72,9 +62,8 @@ class Vertex
 		prepare( );
 		
 		p_body = _b;
-		x = _x;
-		y = _y;
-		z = _z;
+		
+		vector.set( _x, _y, _z );
 	}
 	
 	this( Vertex src, bool copy_refs=false )
@@ -89,6 +78,11 @@ class Vertex
 		}
 	}
 	
+	// these functions allow writing to the vector class as if the contents were here
+	float x( float _x ) { return vector.x = _x; }
+	float y( float _y ) { return vector.y = _y; }
+	float z( float _z ) { return vector.z = _z; }
+	
 	void zero( )
 	{
 		x = y = z = 0.0f;
@@ -96,44 +90,14 @@ class Vertex
 	
 	void deb( )
 	{
-		writefln( "%s,%s,%s", x, y, z );
+		writefln( "%s,%s,%s", vector.x, vector.y, vector.z );
 	}
 	
-	int opAddAssign( Vertex o )
-	{
-		x += o.x;
-		y += o.y;
-		z += o.z;
-		
-		return 0;
-	}
+	int opAddAssign( Vertex o ) { vector += o; return 0; }
+	int opSubAssign( Vertex o ) { vector -= o; return 0; }
 	
-	int opSubAssign( Vertex o )
-	{
-		x -= o.x;
-		y -= o.y;
-		z -= o.z;
-		
-		return 0;
-	}
-	
-	int opDivAssign( float n )
-	{
-		x /= n;
-		y /= n;
-		z /= n;
-		
-		return 0;
-	}
-	
-	int opMulAssign( float n )
-	{
-		x *= n;
-		y *= n;
-		z *= n;
-		
-		return 0;
-	}
+	int opDivAssign( float n ) { vector /= n; return 0; }
+	int opMulAssign( float n ) { vector *= n; return 0; }
 	
 	Vertex opMul( float a )
 	{
@@ -141,9 +105,9 @@ class Vertex
 		
 		v += this;
 		
-		v.x *= a;
-		v.y *= a;
-		v.z *= a;
+		v *= a;
+		
+		writefln( "WARNING: Using an arithmetic operation on the Vertex class, code should be updated to use Vector!" );
 		
 		return v;
 	}
@@ -156,6 +120,8 @@ class Vertex
 		
 		v += vt;
 		
+		writefln( "WARNING: Using an arithmetic operation on the Vertex class, code should be updated to use Vector!" );
+		
 		return v;
 	}
 	
@@ -167,14 +133,14 @@ class Vertex
 		
 		v /= a;
 		
+		writefln( "WARNING: Using an arithmetic operation on the Vertex class, code should be updated to use Vector!" );
+		
 		return v;
 	}
 	
 	void setTo( Vertex v )
 	{
-		x = v.x;
-		y = v.y;
-		z = v.z;
+		vector.set( v );
 	}
 	
 	Vertex opSub( Vertex v )
@@ -201,6 +167,6 @@ class Vertex
 	
 	void glv()
 	{
-		glVertex3f( x, y, z );
+		glVertex3f( vector.x, vector.y, vector.z );
 	}
 }

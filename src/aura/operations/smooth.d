@@ -141,7 +141,7 @@ class SmoothOperation : Operation
 		b = faces[0].f_body;
 		
 		//ABMap!( Edge, Vertex ) midpoints = new ABMap!( Edge, Vertex );
-		Vertex[Edge] midpoints;
+		Vector[Edge] midpoints;
 		
 		// The face points are positioned as the average of the positions of the face's original vertices;
 		foreach ( n, f; faces )
@@ -151,8 +151,8 @@ class SmoothOperation : Operation
 			
 			foreach ( e; f.edges )
 			{
-				Vertex vt = new Vertex( null, 0, 0, 0 );
-				vt += e.va;
+				Vector vt;
+				vt.set( e.va );
 				vt += e.vb;
 				vt /= 2;
 				midpoints[e] = vt;
@@ -187,7 +187,7 @@ class SmoothOperation : Operation
 		
 		foreach ( P; ops )
 		{
-			Vertex F = new Vertex( null, 0, 0, 0 );
+			Vector F;
 			
 			int a = 0;
 			
@@ -213,7 +213,7 @@ class SmoothOperation : Operation
 			F /= a;
 			
 
-			Vertex R = new Vertex( null, 0, 0, 0 );
+			Vector R;
 			int b = 0;
 			
 			foreach ( ve; P.edges )
@@ -244,12 +244,10 @@ class SmoothOperation : Operation
 			
 			if ( n < 4 ) n = 4;
 			
-			Vertex PC = (F + (R*2) + ((n-3) * P)) / n;
+			Vector PC = (F + (R*2) + ((n-3) * P.vector)) / n;
 			
 			//writefln( "XYZ: %f %f %f", PC.x, PC.y, PC.z );
-			P.zero;
-			P += PC;
-			
+			P.vector = PC;
 		}
 		
 		foreach ( n, f; faces )

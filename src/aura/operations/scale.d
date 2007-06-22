@@ -13,7 +13,7 @@ class ScaleGroup
 	VertexList verts;
 	VertexList orig_verts;
 	
-	Vertex centre;
+	Vector centre;
 	
 	int type = 1;
 	
@@ -27,12 +27,12 @@ class ScaleGroup
 		orig_verts = new VertexList;
 		
 		int numVerts = 0;
-		centre = new Vertex( null, 0, 0, 0 );
+		centre.set( 0, 0, 0 );// = new Vertex( null, 0, 0, 0 );
 		
 		foreach ( v; verts )
 		{
 			orig_verts.append( new Vertex( v ) );
-			centre += v;
+			centre += v.vector;
 			numVerts++;
 		}
 		centre /= numVerts;
@@ -48,8 +48,9 @@ class ScaleGroup
 		foreach ( v; verts )
 		{
 			Vertex ov = orig_verts[a];
+			Vector tv;
 			
-			v.setTo( ov );
+			tv.set( ov );
 			
 			
 			if ( type == ScaleOperation.scaleX 
@@ -57,7 +58,7 @@ class ScaleGroup
 				|| type == ScaleOperation.scaleRadialY
 				|| type == ScaleOperation.scaleRadialZ )
 			{
-				v.x = centre.x + (v.x - centre.x) * value;
+				tv.x = centre.x + (tv.x - centre.x) * value;
 			}
 			
 			if ( type == ScaleOperation.scaleY 
@@ -65,7 +66,7 @@ class ScaleGroup
 				|| type == ScaleOperation.scaleRadialX
 				|| type == ScaleOperation.scaleRadialZ )
 			{
-				v.y = centre.y + (v.y - centre.y) * value;
+				tv.y = centre.y + (tv.y - centre.y) * value;
 			}
 			
 			if ( type == ScaleOperation.scaleZ
@@ -73,8 +74,10 @@ class ScaleGroup
 				|| type == ScaleOperation.scaleRadialX
 				|| type == ScaleOperation.scaleRadialY)
 			{
-				v.z = centre.z + (v.z - centre.z) * value;
+				tv.z = centre.z + (tv.z - centre.z) * value;
 			}
+			
+			v.vector = tv;
 
 			a++;
 		}

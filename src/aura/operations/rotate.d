@@ -15,7 +15,7 @@ class RotateGroup
 	VertexList verts;
 	VertexList orig_verts;
 	
-	Vertex centre;
+	Vector centre;
 	Vector n;
 	
 	int type = 1;
@@ -31,12 +31,12 @@ class RotateGroup
 
 		// calculate centre
 		int numVerts = 0;
-		centre = new Vertex( null, 0, 0, 0 );
+		centre.set( 0, 0, 0 );// = new Vertex( null, 0, 0, 0 );
 		foreach ( v; verts )
 		{
 			orig_verts.append( new Vertex( v ) );
 			
-			centre += v;
+			centre += v.vector;
 			numVerts++;
 		}
 		centre /= numVerts;
@@ -48,8 +48,8 @@ class RotateGroup
 		n.setToVertex( new Vertex( null, 0, 0, 0 ) );
 		for( int i = 0; i < verts.length; i+=2)
 		{
-			v1.setToVertex( verts[i] - centre );
-			v2.setToVertex( verts[i+1] - centre );
+			v1.set( verts[i].vector - centre );
+			v2.set( verts[i+1].vector - centre );
 			n += v1.cross( v2 );
 		}
 		n.normalize( );
@@ -63,13 +63,15 @@ class RotateGroup
 		foreach ( v; verts )
 		{
 			Vertex ov = orig_verts[a];
+			Vector tv;
 			
-			v.setTo( ov );
+			tv.set( ov );
 			
-			Vertex p = new Vertex( null, 0, 0, 0 );
+			Vector p;
+			p.set( 0, 0, 0 );
 			
 			// translate to origin
-			p = v - centre;
+			p = v.vector - centre;
 			
 			// axis to rotate around
 			float X = 0, Y = 0, Z = 0;
@@ -111,12 +113,12 @@ class RotateGroup
 			float m33 = t * Z*Z + c;
 			
 			// matrix * point
-		    v.x = m11 * p.x + m12 * p.y + m13 * p.z;
-		    v.y = m21 * p.x + m22 * p.y + m23 * p.z;
-		    v.z = m31 * p.x + m32 * p.y + m33 * p.z;
+		    v.vector.x = m11 * p.x + m12 * p.y + m13 * p.z;
+		    v.vector.y = m21 * p.x + m22 * p.y + m23 * p.z;
+		    v.vector.z = m31 * p.x + m32 * p.y + m33 * p.z;
 
 			// translate back
-			v += centre;
+			v.vector += centre;
 			
 			a++;
 		}

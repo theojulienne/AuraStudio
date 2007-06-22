@@ -62,29 +62,32 @@ class MoveGroup
 		foreach ( v; verts )
 		{
 			Vertex ov = orig_verts[a];
+			Vector tv;
 			
-			v.setTo( ov );
+			tv.set( ov );
 			
 			// axis to move along
 			if ( type == MoveOperation.DirectionX ) 
 			{
-				v.x += value;
+				tv.x += value;
 			} else
 			if ( type == MoveOperation.DirectionY ) 
 			{
-				v.y += value;
+				tv.y += value;
 			} else
 			if ( type == MoveOperation.DirectionZ ) 
 			{
-				v.z += value;
+				tv.z += value;
 			} else
 			if ( type == MoveOperation.DirectionN ) 
 			{
-				v.x += value * n.x;
-				v.y += value * n.y;
-				v.z += value * n.z;
+				tv.x += value * n.x;
+				tv.y += value * n.y;
+				tv.z += value * n.z;
 				writefln("normal XYZ: %s %s %s", n.x, n.y, n.z);
 			}
+			
+			v.vector = tv;
 			
 			a++;
 		}

@@ -44,35 +44,67 @@ class SubdivideOperation : Operation
 		
 		foreach ( f; fl )
 		{
+			EdgeList selected = new EdgeList;
+			VertexList v_selected = new VertexList;
+			VertexList unselected = new VertexList;
+			
+			foreach ( e; f.edges )
+			{
+				if ( !( e in edgesl ) )
+					continue;
+				
+				v_selected.append( e.va );
+				v_selected.append( e.vb );
+				
+				selected.append( e );
+			}
+			
+			foreach ( v; f.verts )
+			{
+				if ( v in v_selected )
+					continue;
+				
+				unselected.append( v );
+			}
+			
 			if ( f.verts.length == 3 )
 			{
-				throw new Exception( "Theo was lazy here." );
+				Face nf;
+				
+				if ( selected.length == 1 )
+				{
+					Vertex other = unselected[0];
+					Edge sel = selected[0];
+					
+					nf = f.f_body.addFace( 3, divided_points[sel], other, sel.va );
+					nf = f.f_body.addFace( 3, sel.vb, other, divided_points[sel] );
+				}
+				else if ( selected.length == 2 )
+				{
+					Edge ea = selected[0];
+					Edge eb = selected[1];
+					
+					Vertex shared = ea.getCommonVertex( eb );
+					Vertex enda = ea.getOther( shared );
+					Vertex endb = eb.getOther( shared );
+					
+					nf = f.f_body.addFace( 3, divided_points[ea], divided_points[eb], shared );
+					nf = f.f_body.addFace( 4, enda, endb, divided_points[eb], divided_points[ea] );
+				}
+				else
+				{
+					Edge ea = selected[0];
+					Edge eb = selected[1];
+					Edge ec = selected[2];
+					
+					nf = f.f_body.addFace( 3, divided_points[ea], divided_points[eb], divided_points[ec] );
+					nf = f.f_body.addFace( 3, divided_points[ea], ea.getCommonVertex(eb), divided_points[eb] );
+					nf = f.f_body.addFace( 3, divided_points[eb], eb.getCommonVertex(ec), divided_points[ec] );
+					nf = f.f_body.addFace( 3, divided_points[ec], ec.getCommonVertex(ea), divided_points[ea] );
+				}
 			}
 			else if ( f.verts.length == 4 )
 			{
-				EdgeList selected = new EdgeList;
-				VertexList v_selected = new VertexList;
-				VertexList unselected = new VertexList;
-				
-				foreach ( e; f.edges )
-				{
-					if ( !( e in edgesl ) )
-						continue;
-					
-					v_selected.append( e.va );
-					v_selected.append( e.vb );
-					
-					selected.append( e );
-				}
-				
-				foreach ( v; f.verts )
-				{
-					if ( v in v_selected )
-						continue;
-					
-					unselected.append( v );
-				}
-				
 				if ( selected.length == 1 )
 				{
 					Edge e = selected[0];

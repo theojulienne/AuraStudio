@@ -2,6 +2,8 @@ module aura.model.vector;
 
 import aura.model.vertex;
 
+import opengl.gl;
+
 import std.math;
 
 struct Vector
@@ -84,7 +86,7 @@ struct Vector
 		return n;
 	}
 	
-	Vector dot( Vector v2 )
+	float dot( Vector v2 )
 	{
 		return x*v2.x + y*v2.y + z*v2.z;
 	}
@@ -139,5 +141,34 @@ struct Vector
 	void setToVertex( Vertex v )
 	{
 		set( v );
+	}
+	
+	static Vector getAverage( Vector vs[] ... )
+	{
+		Vector tmp;
+		
+		foreach ( v; vs )
+			tmp += v;
+		
+		tmp /= vs.length;
+		
+		return tmp;
+	}
+	
+	static Vector getAverage( Vertex vs[] ... )
+	{
+		Vector ves[];
+		
+		ves.length = vs.length;
+		
+		foreach ( a, v; vs )
+			ves[a] = v.vector;		
+		
+		return Vector.getAverage( ves );
+	}
+	
+	void glv()
+	{
+		glVertex3f( x, y, z );
 	}
 }

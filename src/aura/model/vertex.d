@@ -153,16 +153,9 @@ class Vertex
 		return nv;
 	}
 	
-	static Vertex makeCenterOf( Vertex a, Vertex b )
+	static Vector makeCenterOf( Vertex a, Vertex b )
 	{
-		Vertex v = new Vertex( null, 0, 0, 0 );
-		
-		v.zero( );
-		v += a;
-		v += b;
-		v /= 2;
-		
-		return v;
+		return Vector.getAverage( a, b );
 	}
 	
 	void glv()

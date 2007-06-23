@@ -3,6 +3,7 @@ module aura.model.edge;
 import aura.list;
 import aura.model.vertex;
 import aura.model.face;
+import aura.model.vector;
 
 import std.stdio;
 
@@ -67,7 +68,7 @@ class Edge
 		return ( va == v || vb == v );
 	}
 	
-	Vertex getCenter( )
+	Vector getCenter( )
 	{
 		return Vertex.makeCenterOf( va, vb );
 	}

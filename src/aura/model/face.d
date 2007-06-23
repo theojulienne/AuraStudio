@@ -151,9 +151,6 @@ class Face
 	
 	void renderFaceSelectVertex( )
 	{
-		/*if ( tris.length > 1 )
-			return;*/
-		
 		foreach ( t; tris )
 		{
 			Vertex center = new Vertex( null, 0, 0, 0 );
@@ -169,9 +166,9 @@ class Face
 			Edge eb = Edge.getEdge( null, vb, vc );
 			Edge ec = Edge.getEdge( null, vc, va );
 			
-			Vertex ca = Vertex.makeCenterOf( va, vb );
-			Vertex cb = Vertex.makeCenterOf( vb, vc );
-			Vertex cc = Vertex.makeCenterOf( vc, va );
+			Vector ca = Vertex.makeCenterOf( va, vb );
+			Vector cb = Vertex.makeCenterOf( vb, vc );
+			Vector cc = Vertex.makeCenterOf( vc, va );
 			
 			int real_edges = 0;
 			
@@ -249,11 +246,11 @@ class Face
 					throw new Exception( "Unique vertex was same as shared vertex" );
 				
 				// calculate the center of the edge between ua and ub
-				Vertex ecenter = Vertex.makeCenterOf( ua, ub );
+				Vector ecenter = Vertex.makeCenterOf( ua, ub );
 				
 				// calculate the center of each real edges
-				Vertex eac = ea.getCenter( );
-				Vertex ebc = eb.getCenter( );
+				Vector eac = ea.getCenter( );
+				Vector ebc = eb.getCenter( );
 				
 				glDisable( GL_CULL_FACE );
 				
@@ -285,51 +282,6 @@ class Face
 				throw new Exception( "Encountered a sub-triangle with only 1 real edge. Was triangulation implemented without adding vertex detection code for this case? Oops!" );
 			}
 		}
-		
-		/*
-		
-		Vertex center = new Vertex( null, 0, 0, 0 );
-		foreach ( v; verts )
-			center += v;
-		center /= verts.length;
-		
-		glDisable(GL_CULL_FACE);
-		
-		Vertex va = verts[0];
-		Vertex vb = verts[1];
-		Vertex vc = verts[2];
-		
-		Vertex ca = Vertex.makeCenterOf( va, vb );
-		Vertex cb = Vertex.makeCenterOf( vb, vc );
-		Vertex cc = Vertex.makeCenterOf( vc, va );
-		
-		glPushName( cast(int)va );
-		glBegin( GL_TRIANGLES );
-		glColor3f( 1.0f, 0.0f, 0.0f );
-		va.glv; ca.glv; center.glv;
-		glColor3f( 1.0f, 0.5f, 0.0f );
-		va.glv; cc.glv; center.glv;
-		glEnd( );
-		glPopName( );
-		
-		glPushName( cast(int)vb );
-		glBegin( GL_TRIANGLES );
-		glColor3f( 0.0f, 1.0f, 0.0f );
-		vb.glv; cb.glv; center.glv;
-		glColor3f( 0.0f, 1.0f, 0.5f );
-		vb.glv; ca.glv; center.glv;
-		glEnd( );
-		glPopName( );
-		
-		glPushName( cast(int)vc );
-		glBegin( GL_TRIANGLES );
-		glColor3f( 0.0f, 0.0f, 1.0f );
-		vc.glv; cc.glv; center.glv;
-		glColor3f( 0.0f, 0.5f, 1.0f );
-		vc.glv; cb.glv; center.glv;
-		glEnd( );
-		glPopName( );
-		*/
 	}
 	
 	void renderFaceSelectEdge( )
@@ -422,7 +374,7 @@ class Face
 					throw new Exception( "Unique vertex was same as shared vertex" );
 				
 				// calculate the center of the edge between ua and ub
-				Vertex ecenter = Vertex.makeCenterOf( ua, ub );
+				Vector ecenter = Vertex.makeCenterOf( ua, ub );
 				
 				// got all we need!
 				
@@ -448,45 +400,6 @@ class Face
 				throw new Exception( "Encountered a sub-triangle with only 1 real edge. Was triangulation implemented without adding edge detection code for this case? Oops!" );
 			}
 		}
-		
-		/*return;
-		
-		////// OLD //////
-		Vertex center = new Vertex( null, 0, 0, 0 );
-		foreach ( v; verts )
-			center += v;
-		center /= verts.length;
-		
-		glDisable(GL_CULL_FACE);
-		
-		Vertex va = verts[0];
-		Vertex vb = verts[1];
-		Vertex vc = verts[2];
-		
-		Edge ea = Edge.getEdge( null, va, vb );
-		Edge eb = Edge.getEdge( null, vb, vc );
-		Edge ec = Edge.getEdge( null, vc, va );
-		
-		glPushName( cast(int)ea );
-		glBegin( GL_TRIANGLES );
-		glColor3f( 1.0f, 0.0f, 0.0f );
-		va.glv; vb.glv; center.glv;
-		glEnd( );
-		glPopName( );
-		
-		glPushName( cast(int)eb );
-		glBegin( GL_TRIANGLES );
-		glColor3f( 0.0f, 1.0f, 0.0f );
-		vb.glv; vc.glv; center.glv;
-		glEnd( );
-		glPopName( );
-		
-		glPushName( cast(int)ec );
-		glBegin( GL_TRIANGLES );
-		glColor3f( 0.0f, 0.0f, 1.0f );
-		vc.glv; va.glv; center.glv;
-		glEnd( );
-		glPopName( );*/
 	}
 	
 	void renderFaceSelect( int selectMode )

@@ -15,7 +15,7 @@ class MoveGroup
 	VertexList verts;
 	VertexList orig_verts;
 	
-	Vertex centre;
+	Vector centre;
 	Vector n;
 	
 	int type = 1;
@@ -31,7 +31,6 @@ class MoveGroup
 		
 		// calculate centre
 		int numVerts = 0;
-		centre = new Vertex( null, 0, 0, 0 );
 		foreach ( v; verts )
 		{
 			orig_verts.append( new Vertex( v ) );
@@ -48,8 +47,8 @@ class MoveGroup
 		n.setToVertex( new Vertex( null, 0, 0, 0 ) );
 		for( int i = 0; i < verts.length; i+=2)
 		{
-			v1.setToVertex( verts[i] - centre );
-			v2.setToVertex( verts[i+1] - centre );
+			v1 = verts[i].vector - centre;
+			v2 = verts[i+1].vector - centre;
 			n += v1.cross( v2 );
 		}
 		n.normalize( );

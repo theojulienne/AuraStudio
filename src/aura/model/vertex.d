@@ -142,7 +142,7 @@ class Vertex
 	{
 		vector.set( v );
 	}
-	
+	/*
 	Vertex opSub( Vertex v )
 	{
 		Vertex nv = new Vertex( null, 0, 0, 0 );
@@ -152,7 +152,7 @@ class Vertex
 		
 		return nv;
 	}
-	
+	*/
 	static Vector makeCenterOf( Vertex a, Vertex b )
 	{
 		return Vector.getAverage( a, b );

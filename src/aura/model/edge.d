@@ -91,7 +91,7 @@ class Edge
 	{
 		return faces.length > 0;
 	}
-	
+
 	static Edge getEdge( Face f, Vertex a, Vertex b )
 	{
 		foreach ( e; a.edges )

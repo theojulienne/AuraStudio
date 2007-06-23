@@ -146,6 +146,28 @@ class SubdivideOperation : Operation
 					}
 					
 					// find the middle of the edges
+					Edge emid, ea, eb;
+					
+					for ( int a = 0; a < 3; a++ )
+					{
+						emid = selected[a];
+						
+						ea = selected[(a<1)?1:0];
+						eb = selected[(a<2)?2:1];
+						
+						if ( emid.adjacentTo( ea ) && emid.adjacentTo( eb ) )
+							break;
+					}
+					
+					Face nf;
+					
+					Vertex ca = emid.getCommonVertex(ea);
+					Vertex cb = emid.getCommonVertex(eb);
+					
+					nf = f.f_body.addFace( 3, divided_points[emid], ca, divided_points[ea] );
+					nf = f.f_body.addFace( 3, cb, divided_points[emid], divided_points[eb] );
+					nf = f.f_body.addFace( 3, divided_points[eb], divided_points[emid], divided_points[ea] );
+					nf = f.f_body.addFace( 4, eb.getOther(cb), divided_points[eb], divided_points[ea], ea.getOther(ca) );
 				}
 				else if ( selected.length == 4 )
 				{

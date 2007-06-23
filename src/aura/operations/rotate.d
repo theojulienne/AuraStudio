@@ -45,7 +45,6 @@ class RotateGroup
 		// better to calculate face/vertex normals properly
 		Vector v1;
 		Vector v2;
-		n.setToVertex( new Vertex( null, 0, 0, 0 ) );
 		for( int i = 0; i < verts.length; i+=2)
 		{
 			v1.set( verts[i].vector - centre );

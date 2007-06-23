@@ -6,7 +6,7 @@ import aura.model.all;
 import aura.operation;
 import aura.list;
 
-struct VEMap
+struct edge_points
 {
 	Edge e;
 	Vertex v;
@@ -63,63 +63,79 @@ class SmoothOperation : Operation
 {
 	Body b;
 	
-	Vertex[Edge] vemap;
-	Vertex[Face] vfmap;
-	/*ABMap!(Edge,Vertex) vemap;
+	Vertex[Edge] edge_points;
+	Vertex[Face] face_points;
+	VertexList edge_points_l;
+	/*ABMap!(Edge,Vertex) edge_points;
 	ABMap!(Face,Vertex) vfmap;*/
 	
 	this( )
 	{
+		edge_points_l = new VertexList;
 	}
 	
-	Vertex add_face_vert( Face f )
+	Vertex addFacePoint( Face f )
 	{
 		Vertex v = new Vertex( b, 0, 0, 0 );
 		
-		foreach ( fv; f.verts )
-		{
-			v.vector += fv;
-		}
-		
-		v.vector /= f.verts.length;
+		v.vector = Vector.getAverage( f.verts.get );
 		
 		return v;
 	}
 	
 	// Set each edge point to be the average of all neighbouring face points and original points.
-	Vertex add_edge_vert( Edge e )
+	Vertex addEdgePoint( Edge e )
 	{
 		int n = 2;
 		
 		Vertex vb = new Vertex( b, 0, 0, 0 );
 		
 		//  and original points
-		vb += e.va;
-		vb += e.vb;
+		/*vb += e.va;
+		vb += e.vb;*/
+		
+		Vector vs[];
+		int vn = 0;
+		
+		vs.length = 2 + e.faces.length;
+		
+		// original points
+		vs[0] = e.va.vector;
+		vs[1] = e.vb.vector;
+		vn = 2;
 		
 		//  of all neighbouring face points
 		foreach ( f; e.faces )
 		{
-			if ( !( f in vfmap ) )
+			if ( !( f in face_points ) )
 				continue;
 			
-			vb += vfmap[f];
-			n++;
+			vs[vn] = face_points[f].vector;
+			vn++;
 		}
 		
-		vb /= n;
+		// if this edge has only 1 selected face (as opposed to 2),
+		// we don't need to translate the edge point closer to the
+		// face point.
+		if ( vn == 3 )
+			vn = 2;
 		
-		vemap[e] = vb;
+		vs.length = vn;
+		
+		vb.vector = Vector.getAverage( vs );
+		
+		edge_points[e] = vb;
+		edge_points_l.append( vb );
 		
 		return vb;
 	}
 	
-	Vertex get_vert_for_edge( Edge e )
+	Vertex getEdgePoint( Edge e )
 	{
-		if ( !( e in vemap ) )
-			return add_edge_vert( e );
+		if ( !( e in edge_points ) )
+			return addEdgePoint( e );
 		
-		return vemap[e];
+		return edge_points[e];
 	}
 	
 	bool prepare( Selection sel )
@@ -127,7 +143,7 @@ class SmoothOperation : Operation
 		if ( !Operation.prepare( sel ) )
 			return false;
 		
-		//vemap = new ABMap!( Edge, Vertex );
+		//edge_points = new ABMap!( Edge, Vertex );
 		//vfmap = new ABMap!( Face, Vertex );
 		
 		auto faces = sel.getFaces( );
@@ -136,7 +152,7 @@ class SmoothOperation : Operation
 		if ( faces.length == 0 )
 			return false;
 		
-		VertexList ops = new VertexList;
+		VertexList original_points = new VertexList;
 		
 		b = faces[0].f_body;
 		
@@ -146,16 +162,19 @@ class SmoothOperation : Operation
 		// The face points are positioned as the average of the positions of the face's original vertices;
 		foreach ( n, f; faces )
 		{
-			Vertex vc = add_face_vert( f );
-			vfmap[f] = vc;
+			Vertex vc = addFacePoint( f );
+			face_points[f] = vc;
 			
-			foreach ( e; f.edges )
+			// collect midpoints for all edges that may be used
+			foreach ( v; f.verts )
 			{
-				Vector vt;
-				vt.set( e.va );
-				vt += e.vb;
-				vt /= 2;
-				midpoints[e] = vt;
+				foreach ( e; v.edges )
+				{
+					if ( e in midpoints )
+						continue;
+
+					midpoints[e] = Vector.getAverage( e.va, e.vb );
+				}
 			}
 		}
 		
@@ -163,7 +182,7 @@ class SmoothOperation : Operation
 		// and the average of the locations of the two new adjacent face points;
 		foreach ( n, f; faces )
 		{
-			Vertex vc = vfmap[f];
+			Vertex vc = face_points[f];
 			VertexList vl = new VertexList;
 			
 			for ( int en = 0; en < f.edges.length; en++ )
@@ -173,76 +192,71 @@ class SmoothOperation : Operation
 				if ( et < 0 )
 					et = f.edges.length-1;
 				
-				Vertex vt = get_vert_for_edge( f.edges[en] );
-				Vertex vp = get_vert_for_edge( f.edges[et] );
+				Vertex vt = getEdgePoint( f.edges[en] );
+				Vertex vp = getEdgePoint( f.edges[et] );
 				
 				Vertex vo = f.edges[en].getCommonVertex( f.edges[et] );
 				
 				Face nf = b.addFace( 4, vc, vp, vo, vt );
 				sel.select( nf );
 				
-				ops.appendUnique( vo );
+				original_points.appendUnique( vo );
 			}
 		}
 		
-		foreach ( P; ops )
+		foreach ( P; original_points )
 		{
 			Vector F;
 			
 			int a = 0;
 			
-			//writefln( "P.faces.length: %d", P.faces.length);
-			//writefln( "P.edges.length: %d", P.edges.length);
-			//writefln( "vfmap.length: %d", vfmap.length);
-			//writefln( "vemap.length: %d", vemap.length);
 			foreach ( vf; P.faces )
 			{
-				if ( !( vf in vfmap ) )
+				if ( !( vf in face_points ) )
 				{
 					continue;
 				}
 				
-				F += vfmap[vf];
-
-				//writefln( "F-XYZ: %f %f %f", F.x, F.y, F.z );
-				
+				F += face_points[vf];
 				
 				a++;
 			}
 			
 			F /= a;
-			
 
 			Vector R;
 			int b = 0;
-			
+			writefln( "%s edges for P", P.edges.length );
 			foreach ( ve; P.edges )
 			{
-				if ( !( ve in vemap ) )
+				Vertex other = ve.getOther( P );
+				
+				// if it's an edge to an edge point, add the midpoint
+				if ( other in edge_points_l )
 				{
-					/*Vertex vt = new Vertex( null, 0, 0, 0 );
-					vt += ve.va;
-					vt += ve.vb;
-					vt /= 2;
-					R += vt;
-					b++;*/
+					R += Vector.getAverage( ve.va, ve.vb );
+					b++;
 					continue;
 				}
 				
+				// if it's an edge to an unselected original point,
+				// add our position so we don't move towards it
+				if ( !( other in original_points ) )
+				{
+					R += P.vector;
+					b++;
+					continue;
+				}
+				
+				// otherwise, it's an edge to an original point that
+				// is also selected, so add the precalculated midpoint
 				R += midpoints[ve];
-
-				
-				//writefln( "R-XYZ: %f %f %f", R.x, R.y, R.z );
-				
-				
 				b++;
 			}
-			
+			writefln( "%s real edges for P", b );
 			R /= b;
 			
 			float n = b;
-			
-			if ( n < 4 ) n = 4;
 			
 			Vector PC = (F + (R*2) + ((n-3) * P.vector)) / n;
 			

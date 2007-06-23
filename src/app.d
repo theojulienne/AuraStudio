@@ -22,6 +22,7 @@ import aura.model.all;
 
 import aura.operation;
 import aura.operations.inset;
+import aura.operations.subdivide;
 import aura.operations.extrude;
 import aura.operations.move;
 import aura.operations.smooth;
@@ -61,6 +62,7 @@ class AuraWindow : WindowWidget {
 		this.make_menu( );
 		
 		sel = new Selection;
+		sel.window_selection = true;
 		
 		mode = new ComboWidget( this, lt.bounds("mode") );
 		mode_body = mode.appendItem( "Body" );
@@ -162,6 +164,7 @@ class AuraWindow : WindowWidget {
 			appendTo( face_menu, i, "Y", new ExtrudeOperation(ExtrudeOperation.DirectionY) );
 			appendTo( face_menu, i, "Z", new ExtrudeOperation(ExtrudeOperation.DirectionZ) );
 		
+		appendToP( face_menu, "Subdivide", new SubdivideOperation );
 		appendToP( face_menu, "Inset", new InsetOperation );
 		appendToP( face_menu, "Smooth", new SmoothOperation );
 		appendToP( face_menu, "*Bridge", new BridgeOperation );
@@ -186,7 +189,9 @@ class AuraWindow : WindowWidget {
 			appendTo( edge_menu, i, "Radial X", new ScaleOperation(ScaleOperation.scaleRadialX) );
 			appendTo( edge_menu, i, "Radial Y", new ScaleOperation(ScaleOperation.scaleRadialY) );
 			appendTo( edge_menu, i, "Radial Z", new ScaleOperation(ScaleOperation.scaleRadialZ) );
-				
+		
+		appendToP( edge_menu, "Subdivide", new SubdivideOperation );
+		
 		i = appendToP( verts_menu, "Move" );
 			appendTo( verts_menu, i, "Normal?", new MoveOperation(MoveOperation.DirectionN) );
 			appendTo( verts_menu, i, "X", new MoveOperation(MoveOperation.DirectionX) );
@@ -207,7 +212,9 @@ class AuraWindow : WindowWidget {
 			appendTo( verts_menu, i, "Radial X", new ScaleOperation(ScaleOperation.scaleRadialX) );
 			appendTo( verts_menu, i, "Radial Y", new ScaleOperation(ScaleOperation.scaleRadialY) );
 			appendTo( verts_menu, i, "Radial Z", new ScaleOperation(ScaleOperation.scaleRadialZ) );
-					
+		
+		appendToP( verts_menu, "Subdivide", new SubdivideOperation );
+		
 		i = appendToP( body_menu, "Move" );
 			appendTo( body_menu, i, "X", new MoveOperation(MoveOperation.DirectionX) );
 			appendTo( body_menu, i, "Y", new MoveOperation(MoveOperation.DirectionY) );
@@ -226,7 +233,8 @@ class AuraWindow : WindowWidget {
 			appendTo( body_menu, i, "Radial X", new ScaleOperation(ScaleOperation.scaleRadialX) );
 			appendTo( body_menu, i, "Radial Y", new ScaleOperation(ScaleOperation.scaleRadialY) );
 			appendTo( body_menu, i, "Radial Z", new ScaleOperation(ScaleOperation.scaleRadialZ) );		
-				
+		
+		appendToP( body_menu, "Subdivide", new SubdivideOperation );
 		appendToP( body_menu, "*Smooth" );
 	}
 	

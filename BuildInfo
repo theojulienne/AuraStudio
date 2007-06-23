@@ -18,6 +18,7 @@ targets
 			src/aura/operations/move.d
 			src/aura/operations/smooth.d
 			src/aura/operations/scale.d
+			src/aura/operations/subdivide.d
 			src/aura/operations/rotate.d
 			src/aura/model/all.d
 			src/aura/model/mbody.d

@@ -172,20 +172,14 @@ class Face
 			
 			int real_edges = 0;
 			
-			if ( ea.hasFace(this) )
+			if ( ea !is null )
 				real_edges++;
-			else
-				ea = null;
 			
-			if ( eb.hasFace(this) )
+			if ( eb !is null )
 				real_edges++;
-			else
-				eb = null;
 				
-			if ( ec.hasFace(this) )
+			if ( ec !is null )
 				real_edges++;
-			else
-				ec = null;
 			
 			if ( real_edges == 3 )
 			{
@@ -303,20 +297,14 @@ class Face
 			
 			int real_edges = 0;
 			
-			if ( ea.hasFace(this) )
+			if ( ea !is null )
 				real_edges++;
-			else
-				ea = null;
 			
-			if ( eb.hasFace(this) )
+			if ( eb !is null )
 				real_edges++;
-			else
-				eb = null;
 				
-			if ( ec.hasFace(this) )
+			if ( ec !is null )
 				real_edges++;
-			else
-				ec = null;
 			
 			if ( real_edges == 3 )
 			{

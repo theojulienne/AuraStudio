@@ -34,13 +34,19 @@ class Edge
 		}
 	}
 	
-	this( Vertex a, Vertex b )
+	this( Face f, Vertex a, Vertex b )
 	{
 		faces = new FaceList;
 		
 		va = a;
 		vb = b;
 		
+		if ( f is null )
+		{
+			throw new Exception( "Edge created with null face, this is now deprecated." );
+		}
+		
+		faces.append( f );
 		va.edges.append( this );
 		vb.edges.append( this );
 	}
@@ -97,9 +103,20 @@ class Edge
 			}
 		}
 		
-		Edge e = new Edge( a, b );
+		if ( f is null )
+			return null;
+		
+		Edge e = new Edge( f, a, b );
 		e.addFace( f );
 		
 		return e;
+	}
+	
+	bool adjacentTo( Edge b )
+	{
+		if ( b.hasVertex( va ) || b.hasVertex( vb ) )
+			return true;
+		
+		return false;
 	}
 }

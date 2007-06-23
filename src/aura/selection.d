@@ -23,6 +23,13 @@ enum
 
 class Selection
 {
+	// defines whether this is the selection for the window.
+	// if this is false, it's just a group of whatever's and
+	// won't actually change any props of the objects
+	// (this means slower lookups because .selected wont work)
+	// only 1 Selection instance can have this set true.
+	bool window_selection = false;
+	
 	Vertex v_hot = null;
 	Edge e_hot = null;
 	Face f_hot = null;
@@ -193,32 +200,44 @@ class Selection
 	
 	void resetFaceSelection( )
 	{
-		foreach ( f; sel_faces )
-			f.selected = false;
+		if ( window_selection )
+		{
+			foreach ( f; sel_faces )
+				f.selected = false;
+		}
 		
 		sel_faces = new FaceList;
 	}
 	
 	void resetEdgeSelection( )
 	{
-		foreach ( e; sel_edges )
-			e.selected = false;
+		if ( window_selection )
+		{
+			foreach ( e; sel_edges )
+				e.selected = false;
+		}
 		
 		sel_edges = new EdgeList;
 	}
 	
 	void resetVertSelection( )
 	{
-		foreach ( v; sel_verts )
-			v.selected = false;
+		if ( window_selection )
+		{
+			foreach ( v; sel_verts )
+				v.selected = false;
+		}
 		
 		sel_verts = new VertexList;
 	}
 	
 	void resetBodySelection( )
 	{
-		foreach ( b; sel_bodies )
-			b.selected = false;
+		if ( window_selection )
+		{
+			foreach ( b; sel_bodies )
+				b.selected = false;
+		}
 		
 		sel_bodies = new BodyList;
 	}
@@ -444,6 +463,9 @@ class Selection
 	
 	void makeHot( Face f )
 	{
+		if ( !window_selection )
+			return;
+		
 		if ( f_hot !is null )
 			f_hot.hot = false;
 		
@@ -456,6 +478,9 @@ class Selection
 	
 	void makeHot( Edge e )
 	{
+		if ( !window_selection )
+			return;
+		
 		if ( e_hot !is null )
 			e_hot.hot = false;
 
@@ -468,6 +493,9 @@ class Selection
 	
 	void makeHot( Vertex v )
 	{
+		if ( !window_selection )
+			return;
+		
 		if ( v_hot !is null )
 			v_hot.hot = false;
 
@@ -480,6 +508,9 @@ class Selection
 	
 	void makeHot( Body b )
 	{
+		if ( !window_selection )
+			return;
+		
 		if ( b_hot !is null )
 			b_hot.hot = false;
 
@@ -492,6 +523,18 @@ class Selection
 	
 	void select( Face f, bool toggle=true, bool set=false )
 	{
+		if ( !window_selection )
+		{
+			bool sel = toggle ? !(f in sel_faces) : set;
+			
+			if ( sel )
+				sel_faces.appendUnique( f );
+			else
+				sel_faces.remove( f );
+			
+			return;
+		}
+		
 		if ( f !is null )
 		{
 			f.selected = !f.selected;
@@ -507,6 +550,18 @@ class Selection
 	
 	void select( Edge e, bool toggle=true, bool set=false )
 	{
+		if ( !window_selection )
+		{
+			bool sel = toggle ? !(e in sel_edges) : set;
+			
+			if ( sel )
+				sel_edges.appendUnique( e );
+			else
+				sel_edges.remove( e );
+			
+			return;
+		}
+		
 		if ( e !is null )
 		{
 			e.selected = !e.selected;
@@ -522,6 +577,18 @@ class Selection
 	
 	void select( Vertex v, bool toggle=true, bool set=false )
 	{
+		if ( !window_selection )
+		{
+			bool sel = toggle ? !(v in sel_verts) : set;
+			
+			if ( sel )
+				sel_verts.appendUnique( v );
+			else
+				sel_verts.remove( v );
+			
+			return;
+		}
+		
 		if ( v !is null )
 		{
 			v.selected = !v.selected;
@@ -537,6 +604,18 @@ class Selection
 	
 	void select( Body b, bool toggle=true, bool set=false )
 	{
+		if ( !window_selection )
+		{
+			bool sel = toggle ? !(b in sel_bodies) : set;
+			
+			if ( sel )
+				sel_bodies.appendUnique( b );
+			else
+				sel_bodies.remove( b );
+			
+			return;
+		}
+		
 		if ( b !is null )
 		{
 			b.selected = !b.selected;

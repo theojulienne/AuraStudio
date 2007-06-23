@@ -19,6 +19,8 @@ class SubdivideOperation : Operation
 		if ( !Operation.prepare( sel ) )
 			return false;
 		
+		EditMode bak = sel.mode;
+		
 		// convert selection to edges
 		sel.mode = EditMode.Edge;
 		
@@ -27,6 +29,7 @@ class SubdivideOperation : Operation
 		edgesl = edges;
 		
 		sel.resetSelection( );
+		sel.mode = bak;
 		
 		FaceList fl = new FaceList;
 		

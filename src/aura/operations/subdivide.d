@@ -70,6 +70,8 @@ class SubdivideOperation : Operation
 				unselected.append( v );
 			}
 			
+			f.calculateNormal( );
+			
 			if ( f.verts.length == 3 )
 			{
 				Face nf;
@@ -80,7 +82,9 @@ class SubdivideOperation : Operation
 					Edge sel = selected[0];
 					
 					nf = f.f_body.addFace( 3, divided_points[sel], other, sel.va );
+					nf.reorderToNormal( f.normal );
 					nf = f.f_body.addFace( 3, sel.vb, other, divided_points[sel] );
+					nf.reorderToNormal( f.normal );
 				}
 				else if ( selected.length == 2 )
 				{
@@ -92,7 +96,9 @@ class SubdivideOperation : Operation
 					Vertex endb = eb.getOther( shared );
 					
 					nf = f.f_body.addFace( 3, divided_points[ea], divided_points[eb], shared );
+					nf.reorderToNormal( f.normal );
 					nf = f.f_body.addFace( 4, enda, endb, divided_points[eb], divided_points[ea] );
+					nf.reorderToNormal( f.normal );
 				}
 				else
 				{
@@ -101,9 +107,13 @@ class SubdivideOperation : Operation
 					Edge ec = selected[2];
 					
 					nf = f.f_body.addFace( 3, divided_points[ea], divided_points[eb], divided_points[ec] );
+					nf.reorderToNormal( f.normal );
 					nf = f.f_body.addFace( 3, divided_points[ea], ea.getCommonVertex(eb), divided_points[eb] );
+					nf.reorderToNormal( f.normal );
 					nf = f.f_body.addFace( 3, divided_points[eb], eb.getCommonVertex(ec), divided_points[ec] );
+					nf.reorderToNormal( f.normal );
 					nf = f.f_body.addFace( 3, divided_points[ec], ec.getCommonVertex(ea), divided_points[ea] );
+					nf.reorderToNormal( f.normal );
 				}
 			}
 			else if ( f.verts.length == 4 )
@@ -125,8 +135,11 @@ class SubdivideOperation : Operation
 					
 					Face nf;
 					nf = f.f_body.addFace( 3, divided_points[e], va, e.va );
+					nf.reorderToNormal( f.normal );
 					nf = f.f_body.addFace( 3, divided_points[e], e.vb, vb );
+					nf.reorderToNormal( f.normal );
 					nf = f.f_body.addFace( 3, divided_points[e], vb, va );
+					nf.reorderToNormal( f.normal );
 				}
 				else if ( selected.length == 2 )
 				{
@@ -143,8 +156,11 @@ class SubdivideOperation : Operation
 						
 						Face nf;
 						nf = f.f_body.addFace( 3, divided_points[ea], corner, divided_points[eb] );
+						nf.reorderToNormal( f.normal );
 						nf = f.f_body.addFace( 3, divided_points[ea], vmid, unselected[0], ea.getOther(corner) );
+						nf.reorderToNormal( f.normal );
 						nf = f.f_body.addFace( 3, divided_points[eb], eb.getOther(corner), unselected[0], vmid );
+						nf.reorderToNormal( f.normal );
 					}
 					else
 					{
@@ -159,12 +175,16 @@ class SubdivideOperation : Operation
 						if ( flipped )
 						{
 							nf = f.f_body.addFace( 4, ea.va, eb.vb, divided_points[eb], divided_points[ea] );
+							nf.reorderToNormal( f.normal );
 							nf = f.f_body.addFace( 4, divided_points[ea], divided_points[eb], eb.va, ea.vb );
+							nf.reorderToNormal( f.normal );
 						}
 						else
 						{
 							nf = f.f_body.addFace( 4, ea.va, eb.va, divided_points[eb], divided_points[ea] );
+							nf.reorderToNormal( f.normal );
 							nf = f.f_body.addFace( 4, divided_points[ea], divided_points[eb], eb.vb, ea.vb );
+							nf.reorderToNormal( f.normal );
 						}
 					}
 				}
@@ -200,9 +220,13 @@ class SubdivideOperation : Operation
 					Vertex cb = emid.getCommonVertex(eb);
 					
 					nf = f.f_body.addFace( 3, divided_points[emid], ca, divided_points[ea] );
+					nf.reorderToNormal( f.normal );
 					nf = f.f_body.addFace( 3, cb, divided_points[emid], divided_points[eb] );
+					nf.reorderToNormal( f.normal );
 					nf = f.f_body.addFace( 3, divided_points[eb], divided_points[emid], divided_points[ea] );
+					nf.reorderToNormal( f.normal );
 					nf = f.f_body.addFace( 4, eb.getOther(cb), divided_points[eb], divided_points[ea], ea.getOther(ca) );
+					nf.reorderToNormal( f.normal );
 				}
 				else if ( selected.length == 4 )
 				{
@@ -218,6 +242,7 @@ class SubdivideOperation : Operation
 						Vertex comm = f.edges[a].getCommonVertex( f.edges[b] );
 						
 						nf = f.f_body.addFace( 4, v, divided_points[f.edges[b]], comm, divided_points[f.edges[a]] );
+						nf.reorderToNormal( f.normal );
 					}
 				}
 			}

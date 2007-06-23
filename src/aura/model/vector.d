@@ -144,6 +144,11 @@ struct Vector
 		set( v );
 	}
 	
+	int opEquals( Vector v )
+	{
+		return (v.x==x&&v.y==y&&v.z==z);
+	}
+	
 	static Vector getAverage( Vector vs[] ... )
 	{
 		Vector tmp;

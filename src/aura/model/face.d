@@ -110,6 +110,37 @@ class Face
 		}
 	}
 	
+	void reorderToNormal( Vector norm )
+	{
+		Vector mynorm = this.calculateNormal( );
+		
+		if ( mynorm != norm )
+		{
+			writefln( "Face pointing wrong way, fixing (%s,%s,%s) -> (%s,%s,%s)", mynorm.x, mynorm.y, mynorm.z, norm.x, norm.y, norm.z );
+			
+			VertexList newlist = new VertexList;
+			
+			for ( int a = verts.length-1; a>=0; a-- )
+			{
+				newlist.append( verts[a] );
+			}
+			
+			verts = null;
+			verts = newlist;
+			
+			rebuildTris( );
+			
+			mynorm = this.calculateNormal( );
+			
+			if ( mynorm != norm )
+			{
+				// FIXME: this will happen on non-planar faces, some sort of flexibility needs to be added
+				//  ( say, that the normal is within 0.2 of the original, because it will be almost "2" diff )
+				writefln( "After re-ordering verts, normal still different (%s,%s,%s) -> (%s,%s,%s)", mynorm.x, mynorm.y, mynorm.z, norm.x, norm.y, norm.z );
+			}
+		}
+	}
+	
 	void computeEdges( )
 	{
 		int a;

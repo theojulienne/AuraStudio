@@ -84,6 +84,11 @@ struct Vector
 		return n;
 	}
 	
+	Vector dot( Vector v2 )
+	{
+		return x*v2.x + y*v2.y + z*v2.z;
+	}
+	
 	Vector opAdd( Vector v )
 	{
 		Vector tv = *this;

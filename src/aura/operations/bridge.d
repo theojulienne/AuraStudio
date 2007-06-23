@@ -18,7 +18,6 @@ class BridgeOperation : Operation
 		bridges = new FaceList;
 	}
 	
-	// intelligentify me
 	void createBridge( Face f1, Face f2 )
 	{
 		for ( int a = 0; a < f1.verts.length; a++ )
@@ -27,7 +26,7 @@ class BridgeOperation : Operation
 			
 			if ( b == f1.verts.length ) b = 0; // wrap to start
 			
-			bridges.append( f1.f_body.addFace( 4, f1.verts[a], f1.verts[b], f2.verts[b], f2.verts[a] ) );
+			bridges.append( f1.f_body.addFace( 4, f1.verts[a], f1.verts[b], f2.verts[a], f2.verts[b] ) );
 		}
 	}
 	

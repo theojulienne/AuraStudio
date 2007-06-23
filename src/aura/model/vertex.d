@@ -99,60 +99,11 @@ class Vertex
 	int opDivAssign( float n ) { vector /= n; return 0; }
 	int opMulAssign( float n ) { vector *= n; return 0; }
 	
-	Vertex opMul( float a )
-	{
-		Vertex v = new Vertex( null, 0, 0, 0 );
-		
-		v += this;
-		
-		v *= a;
-		
-		writefln( "WARNING: Using an arithmetic operation on the Vertex class, code should be updated to use Vector!" );
-		
-		return v;
-	}
-	
-	Vertex opAdd( Vertex vt )
-	{
-		Vertex v = new Vertex( null, 0, 0, 0 );
-		
-		v += this;
-		
-		v += vt;
-		
-		writefln( "WARNING: Using an arithmetic operation on the Vertex class, code should be updated to use Vector!" );
-		
-		return v;
-	}
-	
-	Vertex opDiv( float a )
-	{
-		Vertex v = new Vertex( null, 0, 0, 0 );
-		
-		v += this;
-		
-		v /= a;
-		
-		writefln( "WARNING: Using an arithmetic operation on the Vertex class, code should be updated to use Vector!" );
-		
-		return v;
-	}
-	
 	void setTo( Vertex v )
 	{
 		vector.set( v );
 	}
-	/*
-	Vertex opSub( Vertex v )
-	{
-		Vertex nv = new Vertex( null, 0, 0, 0 );
-		
-		nv += this;
-		nv -= v;
-		
-		return nv;
-	}
-	*/
+	
 	static Vector makeCenterOf( Vertex a, Vertex b )
 	{
 		return Vector.getAverage( a, b );

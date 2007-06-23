@@ -11,7 +11,7 @@ class InsetFace
 	Face face;
 	FaceList bridges;
 	VertexList orig_verts;
-	Vertex center;
+	Vector center;
 	
 	this( )
 	{
@@ -21,7 +21,7 @@ class InsetFace
 	
 	void calculateOriginalCenter( Face f )
 	{
-		center = new Vertex( null, 0, 0, 0 );
+		center.zero;
 		
 		foreach ( v; f.verts )
 			center += v;
@@ -69,18 +69,18 @@ class InsetFace
 	
 	void update( float value )
 	{
-		Vertex tmp = new Vertex( null, 0, 0, 0 );
+		Vector tmp;
 		
 		int a = 0;
 		
 		foreach ( v; face.verts )
 		{
-			tmp.zero( );
-			v.setTo( center );
-			tmp.setTo( orig_verts[a] );
+			tmp.zero;
+			tmp.set( orig_verts[a] );
 			tmp -= center;
 			tmp *= value;
-			v += tmp;
+			
+			v.vector = center + tmp;
 			
 			a++;
 		}

@@ -78,10 +78,10 @@ class SmoothOperation : Operation
 		
 		foreach ( fv; f.verts )
 		{
-			v += fv;
+			v.vector += fv;
 		}
 		
-		v /= f.verts.length;
+		v.vector /= f.verts.length;
 		
 		return v;
 	}

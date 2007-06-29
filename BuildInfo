@@ -7,6 +7,9 @@ targets
 	application aurastudio
 		sources
 			src/app.d
+			src/aura/window.d
+			src/aura/motiontest.d
+			src/aura/modeller.d
 			src/aura/list.d
 			src/aura/selection.d
 			src/aura/editing.d

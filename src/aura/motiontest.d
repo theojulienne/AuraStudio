@@ -23,6 +23,93 @@ import std.gc;
 
 import aura.window;
 
+class MotionToolWindow : AuraToolWindow {
+	SliderWidget[] sws;
+	LabelWidget[] lbll;
+	LabelWidget[] lblr;
+	
+	AuraMotionTestWindow mtw;
+	
+	this( AuraMotionTestWindow w ) {
+		char[] mid;
+		
+		mtw = w;
+		
+		for ( int a = 0; a < 4; a++ )
+			mid ~= "[{20}<|label" ~ std.string.toString(a+1) ~ "l|label" ~ std.string.toString(a+1) ~ "r|<][{20}<|range" ~ std.string.toString(a+1) ~ "|<][]";
+		
+		super( w, new Bounds( 900, 500, 200, 300 ), "Parameters", "[]"~mid~"[_]" );
+		
+		sws.length = 4;
+		lbll.length = 4;
+		lblr.length = 4;
+		
+		for ( int a = 0; a < 4; a++ )
+		{
+			int rl = a+1;
+			
+			sws[a] = new SliderWidget( this, lt.bounds( "range" ~ std.string.toString(rl) ) );
+			sws[a].minimum = -1;
+			sws[a].maximum = 1;
+			sws[a].value = 0;
+			
+			lbll[a] = new LabelWidget( this, lt.bounds( "label" ~ std.string.toString(rl) ~ "l" ) );
+			lbll[a].justify = LabelWidget.Justify.Left;
+			lblr[a] = new LabelWidget( this, lt.bounds( "label" ~ std.string.toString(rl) ~ "r" ) );
+			lblr[a].justify = LabelWidget.Justify.Right;
+		}
+		
+		lbll[0].text = "Male";
+		lblr[0].text = "Female";
+		
+		lbll[1].text = "Heavy";
+		lblr[1].text = "Light";
+		
+		lbll[2].text = "Nervous";
+		lblr[2].text = "Relaxed";
+		
+		lbll[3].text = "Happy";
+		lblr[3].text = "Sad";
+		
+		sws[0].add_handler( "changed", &value_changed_1 );
+		sws[1].add_handler( "changed", &value_changed_2 );
+		sws[2].add_handler( "changed", &value_changed_3 );
+		sws[3].add_handler( "changed", &value_changed_4 );
+	}
+	
+	void value_changed_1( CEvent evt, CObject obj )
+	{
+		SliderWidget sw = cast(SliderWidget)obj;
+		
+		mtw.control1 = true;
+		mtw.r1 = -sw.value;
+	}
+	
+	void value_changed_2( CEvent evt, CObject obj )
+	{
+		SliderWidget sw = cast(SliderWidget)obj;
+		
+		mtw.control2 = true;
+		mtw.r2 = -sw.value;
+	}
+	
+	void value_changed_3( CEvent evt, CObject obj )
+	{
+		SliderWidget sw = cast(SliderWidget)obj;
+		
+		mtw.control3 = true;
+		mtw.r3 = -sw.value;
+	}
+	
+	void value_changed_4( CEvent evt, CObject obj )
+	{
+		SliderWidget sw = cast(SliderWidget)obj;
+		
+		mtw.control4 = true;
+		mtw.r4 = sw.value;
+	}
+}
+
 class AuraMotionTestWindow : AuraWindow {
 	float[] v, vt, p;
 	float[] vm = [1.726000E+000, 2.005000E+000, -9.453000E+001, -6.021800E+001, -2.153540E+002, -1.785080E+002, -2.242020E+002, -8.873300E+001, 9.966500E+001, 5.694300E+001, 2.175560E+002, 1.784770E+002, 2.242150E+002, -5.490000E-001, 8.493500E+001, 2.178100E+001, 8.999000E+000, -5.082000E+000, -5.949000E+001, 4.495900E+001, -1.862300E+001, -7.562000E+001, 8.944900E+001, -3.941000E+000, -5.837500E+001, 5.106100E+001, -7.152000E+000, -7.410700E+001, -1.241100E+001, 9.100500E+001, 1.528710E+003, 9.856830E+002, 8.915140E+002, 1.498340E+002, 8.775060E+002, 1.366224E+003, 1.094033E+003, 4.914940E+002, 8.922840E+002, 1.501520E+002, 8.691440E+002, 1.358911E+003, 1.088976E+003, 1.338648E+003, 4.869220E+002, 1.519170E+002, -7.834000E+000, -8.728000E+000, -1.048500E+001, 8.823000E+000, -6.398000E+000, -1.152900E+001, -2.958100E+001, 3.141000E+000, -1.047100E+001, 7.963000E+000, -1.749000E+000, -1.082200E+001, -2.633800E+001, -1.143400E+001, 2.714000E+000, -1.204000E+000, -1.204000E+000, -6.100000E-001, -2.243770E+002, 1.303640E+002, 1.531600E+001, 7.671600E+001, -1.351300E+002, -1.592000E+000, 2.230960E+002, -1.112210E+002, -1.718500E+001, -6.687300E+001, -8.930000E-001, 1.356720E+002, 1.250000E-001, 1.110000E-001, 2.010000E+000, 2.522000E+000, 2.443700E+001, 1.910000E+000, -7.495000E+000, -2.713200E+001, -1.817000E+000, -1.820000E+000, -1.991200E+001, -1.758000E+000, 7.271000E+000, 1.010000E-001, 2.694200E+001, 1, -18, -1.045200E+001, -1.386700E+001, 1.195700E+001, -1.680700E+001, -1.682200E+001, -1.585400E+001, 7.390000E+000, -1.381500E+001, 1.219900E+001, -1.437600E+001, -1.648900E+001, -1.565200E+001, -1.633600E+001, 8.316000E+000, -1.060000E-001, 2.540000E-001, 3.735000E+000, 1.065670E+002, 2.763000E+000, 2.078000E+000, 3.912000E+000, 6.409000E+000, -2.962000E+000, -1.050800E+002, -5.609000E+000, -2.554000E+000, -5.643000E+000, -2.010000E-001, -6.388000E+000, -1.490000E-001, -6.200000E-002, 3.053000E+000, -6.034100E+001, -2.756000E+000, -2.889000E+000, -2.703000E+000, -5.980000E-001, -3.218000E+000, 6.014600E+001, 2.519000E+000, 2.494000E+000, 2.987000E+000, -1.560000E-001, 2.090000E-001, 0, 4.600000E-002, 3.300000E-002, 5.500000E-002, -6.350000E-001, -3.920000E+000, 2.900000E-001, -3.754000E+000, -1.561000E+000, 4.000000E-003, 5.010000E-001, 2.669000E+000, 4.700000E-002, 3.451000E+000, 1.740000E-001, 1.499000E+000, -2.588000E+000, -8.995000E+000, -8.631000E+000, 2.420200E+001, 3.746000E+000, -4.648000E+000, -3.930000E-001, 1.582700E+001, -8.544000E+000, 2.293300E+001, 4.141000E+000, -4.423000E+000, -4.410000E-001, -4.807000E+000, 1.553600E+001, 1.037600E+001, 1.036300E+001, 1.035200E+001, -1.143000E+000, 1.084100E+001, 1.096300E+001, 1.017800E+001, 1.369300E+001, 1.032800E+001, -2.440000E-001, 1.235800E+001, 1.099600E+001, 1.042300E+001, 1.070500E+001, 1.358400E+001, 0, 7.700000E-002, -6.000000E-002, -1.110000E-001, -2.006000E+000, -4.330000E+000, -3.920000E-001, -1.071000E+000, -4.761000E+000, -1.820000E-001, 1.447000E+000, 3.448000E+000, 3.520000E-001, 2.680000E-001, -2.200000E-002, 4.766000E+000, 4.100000E+000, 1.130200E+001, 1.260100E+001, -4.072100E+001, -1.334000E+000, 5.840000E+000, 2.062000E+000, 2.454300E+001, 1.260600E+001, -3.879400E+001, -6.240000E-001, 5.376000E+000, 2.142000E+000, 5.993000E+000, 2.462200E+001, 5.895000E+000, 6.029000E+000, 5.942000E+000, 3.132300E+001, -6.916000E+000, 5.265000E+000, 1.709000E+000, -1.390000E+000, 5.809000E+000, 3.068500E+001, -4.154000E+000, 5.579000E+000, 2.859000E+000, 5.664000E+000, -1.871000E+000, 0];
@@ -39,10 +126,16 @@ class AuraMotionTestWindow : AuraWindow {
 	
 	Vector[16] pts;
 	
+	MotionToolWindow mtw;
+	
 	this( ) {
-		super( "Motion Text", "[_scene]" );
+		super( "Motion Test", "[_scene]" );
 		
 		prepare( );
+		
+		mtw = new MotionToolWindow( this );
+		mtw.show( );
+		mtw.focus( );
 	}
 	
 	void gl_redraw( OpenGLWidget w ) {

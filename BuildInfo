@@ -77,6 +77,8 @@ targets
 			src/claro/graphics/widgets/opengl.d
 			src/claro/graphics/widgets/textbox.d
 			src/claro/graphics/widgets/window.d
+			src/claro/graphics/widgets/slider.d
+			src/claro/graphics/widgets/label.d
 
 flags
 	library "claro-base"

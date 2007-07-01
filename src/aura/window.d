@@ -263,3 +263,15 @@ abstract class AuraWindow : WindowWidget {
 	}
 }
 
+abstract class AuraToolWindow : WindowWidget
+{
+	Layout lt;
+	
+	this( WindowWidget parent, Bounds b, char[] name, char[] layout ) {
+		super( parent, b, WindowWidget.Floating | WindowWidget.ToolStyle );
+		
+		this.title = name;
+		
+		lt = new Layout( this, layout, 10, 10 );
+	}
+}

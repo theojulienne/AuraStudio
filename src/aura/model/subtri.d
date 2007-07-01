@@ -68,10 +68,12 @@ class SubTri
 					i1 = 2;
 				}
 			}
-
 			
-			// ... err
+			// hmmm...
+			
 			return false;
+			
+			
 		}
 		
 		

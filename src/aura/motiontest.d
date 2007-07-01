@@ -162,13 +162,79 @@ class AuraMotionTestWindow : AuraWindow {
 		
 		void drawLine( int a, int b )
 		{
-			glBegin( GL_LINES );
-			pts[a].glv;
-			pts[b].glv;
+			// draws ribbons
+			
+			float amt = 0.15;
+			Vector va, ax, ay, vb, bx, by;
+			va.x = ax.x = ay.x = pts[a].x - (amt/2);
+			va.y = ax.y = ay.y = pts[a].y - (amt/2);
+			va.z = ax.z = ay.z = pts[a].z;
+			ax.x += amt;
+			ay.y += amt;
+			
+			vb.x = bx.x = by.x = pts[b].x - (amt/2);
+			vb.y = bx.y = by.y = pts[b].y - (amt/2);
+			vb.z = bx.z = by.z = pts[b].z;
+			bx.x += amt;
+			by.y += amt;
+			
+			//glBegin( GL_LINES );
+			glBegin( GL_TRIANGLES );
+			va.glv;
+			vb.glv;			
+			ax.glv;
+			
+			ax.glv;
+			vb.glv;
+			bx.glv;
+			
+			bx.glv;
+			vb.glv;
+			ax.glv;
+			
+			ax.glv;
+			vb.glv;			
+			va.glv;
+			
 			glEnd( );
 		}
 		
+		
 		glColor4f( 0.0f, 0.0f, 0.5f, 1.0f );
+		
+		// head, lol
+		glBegin( GL_TRIANGLES );
+		Vector vh, h1, h2, h3;
+		int hnum = 0;
+		float hsize = 0.55;
+		vh.x = h1.x = h2.x = h3.x = pts[hnum].x;
+		vh.y = h1.y = h2.y = h3.y = pts[hnum].y - hsize;
+		vh.z = h1.z = h2.z = h3.z = pts[hnum].z;
+		h1.x += hsize;
+		h1.y += hsize;
+		h2.x -= hsize;
+		h2.y += hsize;
+		h3.y += 2*hsize;
+		
+		h1.glv;
+		vh.glv;
+		h2.glv;
+		
+		h2.glv;
+		vh.glv;
+		h1.glv;
+		
+		h1.glv;
+		h3.glv;
+		h2.glv;
+		
+		h2.glv;
+		h3.glv;
+		h1.glv;
+		
+		glEnd( );
+		
+		
 		glLineWidth( 10 );
 		drawLine( 0, 13 );
 		drawLine( 13, 11 );
@@ -223,9 +289,9 @@ class AuraMotionTestWindow : AuraWindow {
 		for (i = 0; i < 15; i++)
 		{
 			//pts[i].x = -(p[i] * c - p[i + 15] * s) + 500;
-			pts[i].x = p[i] + 500;
-			pts[i].y = p[i + 30] - 500;
-			pts[i].z = p[i + 15] + 500;
+			pts[i].x = p[i] + 0;
+			pts[i].y = p[i + 30] - 100;
+			pts[i].z = p[i + 15] + 0;
 		
 			pts[i] *= 0.005;
 		}
